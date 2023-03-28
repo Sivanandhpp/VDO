@@ -68,10 +68,10 @@ class VideoService {
     Uint8List encData = await _readData('${d.path}/$filename.aes');
     // Uint8List encData = await _readData('/storage/emulated/0/VDO/demo.mp4.aes');
     var plainData = await _decryptData(encData);
-    String p = await _writeData(plainData, '${d.path}/$filename');
+    String p = await _writeData(plainData, '${d.path}/$filename.mp4');
     // p = await _writeData(plainData, '/storage/emulated/0/VDO/demo.mp4');
     print("file decrypted successfully: $p");
-    return true;
+    return p;
   }
 
   _encryptData(plainString) {

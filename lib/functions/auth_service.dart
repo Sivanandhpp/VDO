@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/user_model.dart';
 import 'package:vdo/screens/otp_screen.dart';
 
@@ -11,6 +10,7 @@ class AuthService {
   // DatabaseService dbService = DatabaseService();
   // ErrorHandler errHandler = ErrorHandler();
   var verificationId = '';
+
   User? _userFromFirebase(auth.User? user) {
     if (user == null) {
       return null;
@@ -34,11 +34,12 @@ class AuthService {
         }
       },
       codeSent: (String verificationId, int? resendToken) async {
-        Navigator.push(
+        Navigator.pushReplacement(
             context,
             MaterialPageRoute(
               builder: (context) => OtpScreen(
                 verificationId: verificationId,
+                phoneNO: phoneNo,
               ),
             ));
         String smsCode = 'xxxx';
@@ -53,19 +54,22 @@ class AuthService {
     );
   }
 
-  void verifyOTP(BuildContext context, String verificationId, String otp,
-      Function onSuccess) async {
+  void verifyOTP(
+    BuildContext context,
+    String verificationId,
+    String otp,
+  ) async {
     auth.PhoneAuthCredential cred = auth.PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
     auth.User user = (await _firebaseAuth.signInWithCredential(cred)).user!;
-    if (user != null) {
-      onSuccess();
-      // if (dbService.getUserInRtdb(user.uid)) {
-      //   print("yooo");
-      // }
+    // if (user != null) {
+    // onSuccess(user.uid);
+    // if (dbService.getUserInRtdb(user.uid)) {
+    //   print("yooo");
+    // }
 
-      // _userFromFirebase(user);
-    }
+    // _userFromFirebase(user);
+    // }
     // await _firebaseAuth.signInWithCredential(auth.PhoneAuthProvider.credential(
     //     verificationId: verificationId, smsCode: otp));
   }

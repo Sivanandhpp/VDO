@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:vdo/functions/auth_service.dart';
+import 'package:vdo/functions/theme_color.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class _LoginScreenState extends State<LoginScreen> {
   PhoneNumber number = PhoneNumber(isoCode: 'IN');
   String? phNumber = "+91";
   AuthService auth = AuthService();
+  String errorMsg = '';
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,15 +27,16 @@ class _LoginScreenState extends State<LoginScreen> {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(
                   height: 40,
                 ),
+                Image.asset('assets/login.jpg'),
                 const Text(
                   "Welcome to VDO",
                   style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 25,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -40,10 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 10,
                 ),
                 const Text(
-                  "Sign in or Sign up to continue",
+                  "Enter your phone number to Get Started!",
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(
@@ -58,11 +62,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     bottom: 1,
                   ),
                   decoration: BoxDecoration(
-                      color: Colors.grey,
+                      color: ThemeColor.lightGrey,
                       borderRadius: BorderRadius.circular(10)),
                   child: InternationalPhoneNumberInput(
                     onInputChanged: (PhoneNumber number) {
-                      phNumber = number.phoneNumber;
+                      setState(() {
+                        phNumber = number.phoneNumber;
+                      });
                     },
                     searchBoxDecoration: const InputDecoration(
                         prefixIcon: Icon(Icons.room_rounded),
@@ -76,16 +82,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     inputDecoration: const InputDecoration(
                         border: InputBorder.none,
                         hintText: "Phone no",
-                        hintStyle: TextStyle(color: Colors.white)),
-                    cursorColor: Colors.white,
+                        hintStyle: TextStyle(
+                          color: ThemeColor.black,
+                        )),
+                    cursorColor: ThemeColor.black,
                     textStyle: const TextStyle(
-                        color: Colors.white,
+                        color: ThemeColor.black,
                         fontSize: 17,
                         fontWeight: FontWeight.bold),
                     ignoreBlank: false,
                     autoValidateMode: AutovalidateMode.disabled,
                     selectorTextStyle: const TextStyle(
-                        color: Colors.white,
+                        color: ThemeColor.black,
                         fontSize: 17,
                         fontWeight: FontWeight.bold),
                     initialValue: number,
@@ -97,13 +105,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(
+                  height: 5,
+                ),
+                phNumber!.length != 13
+                    ? Text(errorMsg,
+                        style: const TextStyle(
+                            color: ThemeColor.ytRed,
+                            fontWeight: FontWeight.w500))
+                    : Container(),
+                const SizedBox(
                   height: 50,
                 ),
                 GestureDetector(
                   onTap: () {
-                    auth.phoneAuthentication(phNumber!, context);
+                    if (phNumber!.length == 13) {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      auth.phoneAuthentication(phNumber!, context);
+                    } else {
+                      setState(() {
+                        errorMsg = "Invalid Phone Number";
+                      });
+                    }
                   },
-                  child: Container(
+                  child: SizedBox(
                     width: double.infinity,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -112,25 +138,35 @@ class _LoginScreenState extends State<LoginScreen> {
                           "Get Started",
                           style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w500,
+                            color: ThemeColor.primary,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Container(
-                          height: 50,
-                          width: 50,
+                          height: 40,
+                          width: 40,
                           decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(20)),
-                          child: const Icon(Icons.arrow_forward_ios_rounded,
-                              color: Colors.white),
+                              color: ThemeColor.primary,
+                              borderRadius: BorderRadius.circular(15)),
+                          child: isLoading
+                              ? const Center(
+                                  child: SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        color: ThemeColor.white,
+                                      )),
+                                )
+                              : const Icon(Icons.arrow_forward_ios_rounded,
+                                  color: Colors.white),
                         ),
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:vdo/functions/auth_service.dart';
-import 'package:vdo/screens/home_screen.dart';
-
+import 'package:vdo/functions/db_service.dart';
+import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/functions/wrapper.dart';
+import 'package:vdo/screens/login_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
-  const OtpScreen({super.key, required this.verificationId});
+  final String phoneNO;
+  OtpScreen({super.key, required this.verificationId, required this.phoneNO});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -14,68 +17,117 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   AuthService auth = AuthService();
+
+  DatabaseService dbService = DatabaseService();
+
   String? otpCode;
+  TextEditingController pinController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Text("otp screen"),
-              SizedBox(
-                height: 60,
-              ),
-              Pinput(
-                length: 6,
-                showCursor: true,
-                defaultPinTheme: PinTheme(
-                    width: 60,
-                    height: 60,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blue)),
-                    textStyle:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.w600)),
-                onCompleted: (value) {
-                  setState(() {
-                    otpCode = value;
-                  });
-                },
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              GestureDetector(
-                onTap: () {
-                  auth.verifyOTP(context, widget.verificationId, otpCode!, () {
-                    //DB
-
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomeScreen()),
-                        (route) => false);
-                  });
-                },
-                child: Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Colors.blue),
-                  child: Center(
-                      child: Text(
-                    "Submit",
-                    style: TextStyle(color: Colors.white),
-                  )),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 40,
                 ),
-              ),
-            ],
+                Image.asset('assets/otp.jpg'),
+                const Text(
+                  "Welcome to VDO",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "We've sent an OTP to ${widget.phoneNO}",
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                Pinput(
+                  androidSmsAutofillMethod:
+                      AndroidSmsAutofillMethod.smsRetrieverApi,
+                  controller: pinController,
+                  length: 6,
+                  showCursor: true,
+                  defaultPinTheme: PinTheme(
+                      width: 60,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: ThemeColor.primary)),
+                      textStyle: const TextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600)),
+                  onCompleted: (value) {
+                    otpCode = value;
+                  },
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    auth.verifyOTP(context, widget.verificationId, otpCode!);
+                    // (String uid) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Wrapper(),
+                        ));
+                    // }
+                  },
+                  child: Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: ThemeColor.primary),
+                    child: const Center(
+                      child: Text(
+                        "Submit",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => LoginScreen(),));
+                    },
+                    child: const Text(
+                      "Change number?",
+                      style: TextStyle(
+                          color: ThemeColor.primary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 15),
+                    ))
+              ],
+            ),
           ),
         ),
-      )),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

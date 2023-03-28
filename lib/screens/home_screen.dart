@@ -15,30 +15,32 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              Text("HOOOOME"),
-              OutlinedButton(
-                  onPressed: () {
-                    auth.signOut();
-                  },
-                  child: Text("Signout")),
-              OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                Text("HOOOOME"),
+                OutlinedButton(
+                    onPressed: () {
+                      auth.signOut();
+                    },
+                    child: Text("Signout")),
+                OutlinedButton(
+                    onPressed: () {
+                      Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => VideoApp(),
-                        ));
-                  },
-                  child: Text("Video"))
-            ],
+                        ),
+                      );
+                    },
+                    child: Text("Video"))
+              ],
+            ),
           ),
         ),
-      )),
+      ),
     );
   }
 }

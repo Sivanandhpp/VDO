@@ -1,9 +1,11 @@
+import 'dart:io';
+
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/theme_color.dart';
-import 'package:vdo/functions/video_options.dart';
+
 import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';
 import 'package:video_player/video_player.dart';
@@ -18,11 +20,12 @@ class VideoApp extends StatefulWidget {
 
 class _VideoAppState extends State<VideoApp> {
   late VideoPlayerController _controller;
+  //default video
   String videoURL =
       'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa';
-  String fileName = "NotSet";
+  String fileName = "Wrap";
+
   VideoService vs = VideoService();
-  // VideoOptions vdoOptions = VideoOptions();
   @override
   void initState() {
     super.initState();
@@ -96,9 +99,7 @@ class _VideoAppState extends State<VideoApp> {
                           splashColor: Colors.transparent,
                         ),
                         IconButton(
-                          onPressed: () {
-                            vs.getVideo(fileName);
-                          },
+                          onPressed: () {},
                           icon: const Icon(
                             Icons.navigate_next,
                           ),
@@ -128,10 +129,10 @@ class _VideoAppState extends State<VideoApp> {
                         IconButton(
                           onPressed: () {
                             print("click");
-                            // vs.download(videoURL, fileName);
+                            vs.download(videoURL, fileName);
                             DatabaseService dbservice = DatabaseService();
                             dbservice.updateVDO(
-                                fileName, "downloaded", "local");
+                                fileName, "isDownloaded", "true");
                           },
                           icon: const Icon(
                             Icons.download,
@@ -147,77 +148,100 @@ class _VideoAppState extends State<VideoApp> {
                 )
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: FirebaseAnimatedList(
-                query: dbReference.child("vdos"),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                sort: (b, a) {
-                  return a.key.toString().compareTo(b.key.toString());
-                },
-                defaultChild: const Center(
-                  child: LinearProgressIndicator(
-                    color: Colors.blue,
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: FirebaseAnimatedList(
+                  query: dbReference.child("vdos"),
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  defaultChild: const Center(
+                    child: LinearProgressIndicator(
+                      color: Colors.blue,
+                    ),
                   ),
-                ),
-                itemBuilder: (context, snapshot, animation, index) {
-                  return Column(
-                    children: [
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          _controller.pause();
-                          onVdoLinkChange(
-                              snapshot.child('url').value.toString());
-                          videoURL = snapshot.child('url').value.toString();
-                          fileName = snapshot.key.toString();
-                          // setState(() {
-                          //   videoURL = snapshot.value.toString();
-                          // });
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            boxShadow: const [
-                              BoxShadow(
-                                  color: ThemeColor.shadow,
-                                  blurRadius: 10,
-                                  spreadRadius: 0.1,
-                                  offset: Offset(0, 10)),
-                            ],
-                            color: ThemeColor.offWhite,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                snapshot.key.toString(),
-                                style: GoogleFonts.ubuntu(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15,
+                  itemBuilder: (context, snapshot, animation, index) {
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            _controller.pause();
+                            videoURL = snapshot.child('url').value.toString();
+                            fileName = snapshot.key.toString();
+                            if (snapshot
+                                    .child("isDownloaded")
+                                    .value
+                                    .toString() ==
+                                "true") {
+                              vs.getVideo(fileName);
+                              offlineVideo(fileName);
+                            } else {
+                              onlineVideo(videoURL);
+                            }
+
+                            // setState(() {
+                            //   videoURL = snapshot.value.toString();
+                            // });
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: ThemeColor.shadow,
+                                    blurRadius: 10,
+                                    spreadRadius: 0.1,
+                                    offset: Offset(0, 10)),
+                              ],
+                              color: ThemeColor.offWhite,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      snapshot.key.toString(),
+                                      style: GoogleFonts.ubuntu(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      height: 5,
+                                    ),
+                                    Text(
+                                      "${snapshot.child('url').value.toString().substring(0, 55)}...",
+                                      style: const TextStyle(
+                                        fontSize: 10,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 5,
-                              ),
-                              Text(
-                                "${snapshot.child('url').value.toString().substring(0, 60) + "..."}",
-                                style: const TextStyle(
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
+                                snapshot
+                                            .child('isDownloaded')
+                                            .value
+                                            .toString() ==
+                                        "true"
+                                    ? const Icon(
+                                        Icons.download_done_rounded,
+                                        color: ThemeColor.black,
+                                      )
+                                    : Container(),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                },
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -225,15 +249,27 @@ class _VideoAppState extends State<VideoApp> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
-        child: Icon(
+        child: const Icon(
           Icons.add,
         ),
       ),
     );
   }
 
-  onVdoLinkChange(String link) {
+  onlineVideo(String link) {
     final controller = VideoPlayerController.network(link);
+    _controller = controller;
+    setState(() {});
+    _controller.initialize().then((_) {
+      controller.play();
+      setState(() {});
+    });
+  }
+
+  offlineVideo(String fileName) {
+    String filePathString = "/storage/emulated/0/VDO/$fileName.mp4";
+    final File filePath = File(filePathString);
+    final controller = VideoPlayerController.file(filePath);
     _controller = controller;
     setState(() {});
     _controller.initialize().then((_) {

@@ -15,21 +15,12 @@ class UserData {
 
   DatabaseService dbService = DatabaseService();
 
-  // updateRevision(String updatedRevision, BuildContext context) {
-  //   revision = updatedRevision;
-  //   dbService.updateDatabaseUser("revision", updatedRevision, userid, context);
-  // }
-
   snapshotToClass(uid, snapshot) {
     name = snapshot.child('name').value;
     email = snapshot.child('email').value;
     phoneNo = snapshot.child('phone').value;
     password = snapshot.child('password').value;
-
     profile = snapshot.child('profile').value;
- 
-    // spService.setSharedprefUser(
-    //     uid, name, email, phoneNo, password, batch, revision, role);
   }
 
   setUserData(
@@ -37,28 +28,19 @@ class UserData {
       String setname,
       String setemail,
       String setphoneNo,
-      String setpassword,
-    
+
       String setprofile,
-    
       bool setData) {
     userid = uid;
     name = setname;
     email = setemail;
-    phoneNo = setphoneNo;
-    password = setpassword;
-    
+    phoneNo = setphoneNo;   
     profile = setprofile;
 
-
     if (setData) {
-      //SET DATA TO SHARED PREFERANCES WHILE SIGN UP
-      // spService.setSharedprefUser(uid, setname, setemail, setphoneNo,
-      //     setpassword, setbatch, setrevision, setrole);
-
       //SET DATA TO REALTIME DATABASE WHILE SIGN UP
       dbService.setDatabaseUser(
-          uid, setname, setemail, setphoneNo, setpassword, profile);
+          uid, setname, setemail, setphoneNo, profile);
     }
   }
 }
