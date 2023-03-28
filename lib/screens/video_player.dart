@@ -1,10 +1,11 @@
+import 'dart:math';
+
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/main.dart';
 import 'package:video_player/video_player.dart';
 
-/// Stateful widget to fetch and then display video content.
 class VideoApp extends StatefulWidget {
   const VideoApp({super.key});
 
@@ -14,20 +15,21 @@ class VideoApp extends StatefulWidget {
 
 class _VideoAppState extends State<VideoApp> {
   late VideoPlayerController _controller;
-  String videoURL = '';
-
+  String videoURL =
+      'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa';
+  var _progress = 0.0;
   @override
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(videoURL)
       ..initialize().then((_) {
-        // Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
         setState(() {});
       });
   }
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -38,7 +40,88 @@ class _VideoAppState extends State<VideoApp> {
                       aspectRatio: _controller.value.aspectRatio,
                       child: VideoPlayer(_controller),
                     )
-                  : Container(),
+                  : const SizedBox(
+                      height: 210,
+                      child: Center(
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+            ),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _controller.value.isPlaying
+                          ? _controller.pause()
+                          : _controller.play();
+                    });
+                  },
+                  icon: Icon(
+                    _controller.value.isPlaying
+                        ? Icons.pause
+                        : Icons.play_arrow,
+                  ),
+                  iconSize: 40.0,
+                  hoverColor: Colors.transparent,
+                  highlightColor: Colors.transparent,
+                  splashColor: Colors.transparent,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: width - 65,
+                      child: VideoProgressIndicator(_controller,
+                          allowScrubbing: true,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 0)),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.navigate_before,
+                          ),
+                          iconSize: 28.0,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.navigate_next,
+                          ),
+                          iconSize: 28.0,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _controller.value.volume > 0
+                                  ? _controller.setVolume(0)
+                                  : _controller.setVolume(50);
+                            });
+                          },
+                          icon: Icon(
+                            _controller.value.volume > 0
+                                ? Icons.volume_up
+                                : Icons.volume_off,
+                          ),
+                          iconSize: 22.0,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ],
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -50,7 +133,7 @@ class _VideoAppState extends State<VideoApp> {
                   return a.key.toString().compareTo(b.key.toString());
                 },
                 defaultChild: const Center(
-                  child: CircularProgressIndicator(
+                  child: LinearProgressIndicator(
                     color: Colors.blue,
                   ),
                 ),
@@ -62,7 +145,9 @@ class _VideoAppState extends State<VideoApp> {
                       ),
                       GestureDetector(
                         onTap: () {
+                          _controller.pause();
                           onVdoLinkChange(snapshot.value.toString());
+
                           // setState(() {
                           //   videoURL = snapshot.value.toString();
                           // });
@@ -143,14 +228,12 @@ class _VideoAppState extends State<VideoApp> {
 
   onVdoLinkChange(String link) {
     final controller = VideoPlayerController.network(link);
-    print(link);
     _controller = controller;
     setState(() {});
-    _controller
-      ..initialize().then((_) {
-        controller.play();
-        setState(() {});
-      });
+    _controller.initialize().then((_) {
+      controller.play();
+      setState(() {});
+    });
   }
 
   @override

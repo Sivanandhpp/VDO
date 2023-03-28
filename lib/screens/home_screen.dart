@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:vdo/functions/auth_service.dart';
-import 'package:vdo/screens/video_list.dart';
 import 'package:vdo/screens/video_player.dart';
 
 class HomeScreen extends StatefulWidget {
