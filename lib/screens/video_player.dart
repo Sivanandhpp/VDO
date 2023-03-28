@@ -1,10 +1,11 @@
-import 'dart:math';
-
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/functions/video_options.dart';
 import 'package:vdo/main.dart';
 import 'package:video_player/video_player.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class VideoApp extends StatefulWidget {
   const VideoApp({super.key});
@@ -17,7 +18,8 @@ class _VideoAppState extends State<VideoApp> {
   late VideoPlayerController _controller;
   String videoURL =
       'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa';
-  var _progress = 0.0;
+        late bool _isGranted = true;
+  // VideoOptions vdoOptions = VideoOptions();
   @override
   void initState() {
     super.initState();
@@ -117,6 +119,23 @@ class _VideoAppState extends State<VideoApp> {
                           highlightColor: Colors.transparent,
                           splashColor: Colors.transparent,
                         ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => HomePage(),
+                                ));
+                            // vdoOptions.getVideo(videoURL);
+                          },
+                          icon: const Icon(
+                            Icons.download,
+                          ),
+                          iconSize: 28.0,
+                          hoverColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          splashColor: Colors.transparent,
+                        ),
                       ],
                     )
                   ],
@@ -147,7 +166,7 @@ class _VideoAppState extends State<VideoApp> {
                         onTap: () {
                           _controller.pause();
                           onVdoLinkChange(snapshot.value.toString());
-
+                          videoURL = snapshot.value.toString();
                           // setState(() {
                           //   videoURL = snapshot.value.toString();
                           // });
@@ -155,48 +174,34 @@ class _VideoAppState extends State<VideoApp> {
                         child: Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            boxShadow: const [
+                              BoxShadow(
+                                  color: ThemeColor.shadow,
+                                  blurRadius: 10,
+                                  spreadRadius: 0.1,
+                                  offset: Offset(0, 10)),
+                            ],
+                            color: ThemeColor.offWhite,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           padding: const EdgeInsets.all(20.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // imgOrPdf(snapshot),
-                              const SizedBox(
-                                width: 10,
+                              Text(
+                                snapshot.key.toString(),
+                                style: GoogleFonts.ubuntu(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 15,
+                                ),
                               ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // titleWithDel(snapshot),
-                                    const SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text(
-                                      snapshot.key.toString(),
-                                      style: GoogleFonts.ubuntu(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 2,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "${snapshot.value.toString().substring(0, 60) + "..."}",
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "${snapshot.value.toString().substring(0, 60) + "..."}",
+                                style: const TextStyle(
+                                  fontSize: 10,
                                 ),
                               ),
                             ],
@@ -212,15 +217,9 @@ class _VideoAppState extends State<VideoApp> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            _controller.value.isPlaying
-                ? _controller.pause()
-                : _controller.play();
-          });
-        },
+        onPressed: () {},
         child: Icon(
-          _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
+          Icons.add,
         ),
       ),
     );
@@ -234,6 +233,22 @@ class _VideoAppState extends State<VideoApp> {
       controller.play();
       setState(() {});
     });
+  }
+
+   requestStoragePermission() async {
+    if (!await Permission.storage.isGranted) {
+      PermissionStatus result = await Permission.storage.request();
+      Permission.accessMediaLocation.request();
+      if (result.isGranted) {
+        setState(() {
+          _isGranted = true;
+        });
+      } else {
+        setState(() {
+          _isGranted = false;
+        });
+      }
+    }
   }
 
   @override
