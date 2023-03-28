@@ -1,8 +1,10 @@
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/theme_color.dart';
 import 'package:vdo/functions/video_options.dart';
+import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -18,11 +20,13 @@ class _VideoAppState extends State<VideoApp> {
   late VideoPlayerController _controller;
   String videoURL =
       'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa';
-        late bool _isGranted = true;
+  String fileName = "NotSet";
+  VideoService vs = VideoService();
   // VideoOptions vdoOptions = VideoOptions();
   @override
   void initState() {
     super.initState();
+    requestStoragePermission();
     _controller = VideoPlayerController.network(videoURL)
       ..initialize().then((_) {
         setState(() {});
@@ -92,7 +96,9 @@ class _VideoAppState extends State<VideoApp> {
                           splashColor: Colors.transparent,
                         ),
                         IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            vs.getVideo(fileName);
+                          },
                           icon: const Icon(
                             Icons.navigate_next,
                           ),
@@ -121,12 +127,11 @@ class _VideoAppState extends State<VideoApp> {
                         ),
                         IconButton(
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(),
-                                ));
-                            // vdoOptions.getVideo(videoURL);
+                            print("click");
+                            // vs.download(videoURL, fileName);
+                            DatabaseService dbservice = DatabaseService();
+                            dbservice.updateVDO(
+                                fileName, "downloaded", "local");
                           },
                           icon: const Icon(
                             Icons.download,
@@ -165,8 +170,10 @@ class _VideoAppState extends State<VideoApp> {
                       GestureDetector(
                         onTap: () {
                           _controller.pause();
-                          onVdoLinkChange(snapshot.value.toString());
-                          videoURL = snapshot.value.toString();
+                          onVdoLinkChange(
+                              snapshot.child('url').value.toString());
+                          videoURL = snapshot.child('url').value.toString();
+                          fileName = snapshot.key.toString();
                           // setState(() {
                           //   videoURL = snapshot.value.toString();
                           // });
@@ -199,7 +206,7 @@ class _VideoAppState extends State<VideoApp> {
                                 height: 5,
                               ),
                               Text(
-                                "${snapshot.value.toString().substring(0, 60) + "..."}",
+                                "${snapshot.child('url').value.toString().substring(0, 60) + "..."}",
                                 style: const TextStyle(
                                   fontSize: 10,
                                 ),
@@ -235,18 +242,14 @@ class _VideoAppState extends State<VideoApp> {
     });
   }
 
-   requestStoragePermission() async {
+  Future<bool?> requestStoragePermission() async {
     if (!await Permission.storage.isGranted) {
       PermissionStatus result = await Permission.storage.request();
       Permission.accessMediaLocation.request();
       if (result.isGranted) {
-        setState(() {
-          _isGranted = true;
-        });
+        return true;
       } else {
-        setState(() {
-          _isGranted = false;
-        });
+        return false;
       }
     }
   }
