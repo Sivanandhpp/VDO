@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "701178304158",
+    "firebase_url": "https://v-d-o-player-default-rtdb.firebaseio.com",
+    "project_id": "v-d-o-player",
+    "storage_bucket": "v-d-o-player.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701178304158:android:c2658534c30af86d7c0d8f",
+        "android_client_info": {
+          "package_name": "com.example.vdo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701178304158-gn6kgpihrds8ve5kqv736h7cjod6oq5f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsAqJhU6Uw9eNl6K16xBbH6Aa1bT-SqQc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701178304158-gn6kgpihrds8ve5kqv736h7cjod6oq5f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
