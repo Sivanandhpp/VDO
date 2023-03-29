@@ -1,25 +1,309 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/auth_service.dart';
+import 'package:vdo/functions/storage_service.dart';
+import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/main.dart';
+import 'package:vdo/functions/font_sizes.dart';
 
-class SignupScreen extends StatelessWidget {
+class SignupScreen extends StatefulWidget {
   SignupScreen({super.key});
 
+  @override
+  State<SignupScreen> createState() => _SignupScreenState();
+}
+
+class _SignupScreenState extends State<SignupScreen> {
   AuthService auth = AuthService();
+  final _formKey = GlobalKey<FormState>();
+  bool isLoading = false;
+  bool updatedProfile = false;
+  String profileUrl = 'null';
+  String selectedFileName = '';
+  String selectedFilePath = '';
+  Storage storage = Storage();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _phoneNoController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
-        child: Column(
-          children: [
-            Text("signup"),
-            OutlinedButton(
-                onPressed: () {
-                  auth.signOut();
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              Row(
+                children: [
+                  Text(
+                    "New here? Welcome!",
+                    style: GoogleFonts.poppins(
+                      color: ThemeColor.black,
+                      fontSize: FontSize.xxLarge,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 7),
+                    child: Text(
+                      "Please fill the form to continue.",
+                      style: GoogleFonts.poppins(
+                        color: ThemeColor.grey,
+                        fontSize: FontSize.medium,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 40),
+              GestureDetector(
+                onTap: () async {
+                  final results = await FilePicker.platform.pickFiles(
+                    allowCompression: true,
+                    allowMultiple: false,
+                    type: FileType.image,
+                  );
+                  if (results == null) {
+                    // ignore: use_build_context_synchronously
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15.0))),
+                        backgroundColor: ThemeColor.primary,
+                        content: Text(
+                          'No Image Selected',
+                          style: TextStyle(color: ThemeColor.white),
+                        )));
+                  } else {
+                    setState(() {
+                      isLoading = true;
+                      selectedFileName = results.files.single.name;
+                      selectedFilePath = results.files.single.path!;
+                      String fileName =
+                          "${userData.userid}_${userData.name}_$selectedFileName";
+
+                      storage
+                          .uploadProfileImg(selectedFilePath, fileName, context)
+                          .then((value) {
+                        setState(() {
+                          isLoading = false;
+                          updatedProfile = true;
+                        });
+                      });
+                    });
+                  }
                 },
-                child: Text("Signout")),
-          ],
+                child: Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    isLoading
+                        ? const CircleAvatar(
+                            radius: 70,
+                            backgroundColor: Colors.white,
+                            child: ClipOval(
+                                child: CircularProgressIndicator(
+                              color: ThemeColor.primary,
+                            )),
+                          )
+                        : CircleAvatar(
+                            radius: 75,
+                            backgroundColor: ThemeColor.white,
+                            child: ClipOval(
+                              child: CachedNetworkImage(
+                                imageUrl: "www.google.com",
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const CircleAvatar(
+                                  radius: 70,
+                                  backgroundColor: Colors.white,
+                                  child: ClipOval(
+                                    child: Image(
+                                      image: AssetImage('assets/avatar.jpg'),
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                    Container(
+                      height: 40,
+                      width: 40,
+                      decoration: BoxDecoration(
+                          color: ThemeColor.primary,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: const Icon(
+                        Icons.camera_alt_rounded,
+                        size: 20,
+                        color: ThemeColor.white,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    ///Name Input Field
+                    TextFormField(
+                      controller: _nameController,
+                      validator: (value) {
+                        if (_nameController.text.isEmpty) {
+                          return "This field can't be empty";
+                        }
+                      },
+                      style: GoogleFonts.poppins(
+                        color: ThemeColor.black,
+                      ),
+                      keyboardType: TextInputType.name,
+                      textInputAction: TextInputAction.next,
+                      cursorColor: ThemeColor.primary,
+                      decoration: InputDecoration(
+                        fillColor: ThemeColor.textFieldBgColor,
+                        filled: true,
+                        hintText: "Full name",
+                        hintStyle: GoogleFonts.poppins(
+                          color: ThemeColor.textFieldHintColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    // Phone Input Field
+                    TextFormField(
+                      controller: _phoneNoController,
+                      validator: (value) {
+                        if (_phoneNoController.text.isEmpty) {
+                          return "This field can't be empty";
+                        } else if (_phoneNoController.text.length != 10) {
+                          return "Phone number must have 10 digits";
+                        }
+                      },
+                      style: GoogleFonts.poppins(
+                        color: ThemeColor.black,
+                      ),
+                      cursorColor: ThemeColor.primary,
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        fillColor: ThemeColor.textFieldBgColor,
+                        filled: true,
+                        hintText: "Phone No",
+                        hintStyle: GoogleFonts.poppins(
+                          color: ThemeColor.textFieldHintColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    ///E-mail Input Field
+                    TextFormField(
+                      controller: _emailController,
+                      validator: (value) {
+                        if (_emailController.text.isEmpty) {
+                          return "This field can't be empty";
+                        } else if (_emailController.text.split('@').last !=
+                                'nerve.com' &&
+                            _emailController.text.split('@').last !=
+                                'gmail.com') {
+                          return "Enter a valid E-Mail ID";
+                        }
+                      },
+                      style: GoogleFonts.poppins(
+                        color: ThemeColor.black,
+                      ),
+                      cursorColor: ThemeColor.primary,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.next,
+                      decoration: InputDecoration(
+                        fillColor: ThemeColor.textFieldBgColor,
+                        filled: true,
+                        hintText: "E-Mail",
+                        hintStyle: GoogleFonts.poppins(
+                          color: ThemeColor.textFieldHintColor,
+                          fontSize: FontSize.medium,
+                          fontWeight: FontWeight.w400,
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide.none,
+                          borderRadius: BorderRadius.all(Radius.circular(18)),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () {
+                        if (_formKey.currentState!.validate()) {
+                          // await auth.createUserWithEmailAndPassword(
+                          //     _nameController.text,
+                          //     _phoneNoController.text,
+                          //     _emailController.text,
+
+                          //     context);
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: ThemeColor.primary),
+                        child: const Center(
+                          child: Text(
+                            "Done",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              OutlinedButton(
+                  onPressed: () {
+                    auth.signOut();
+                  },
+                  child: Text("Signout")),
+            ],
+          ),
         ),
       )),
     );

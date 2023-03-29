@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:vdo/main.dart';
 
 class DatabaseService {
@@ -39,5 +38,10 @@ class DatabaseService {
   updateVDO(String fileName, String key, String value) {
     final vdoReferance = dbReference.child('vdos/$fileName');
     vdoReferance.update({key: value});
+  }
+
+  updateDatabaseUser(String key, String value, String uid, context) {
+    final userReferance = dbReference.child('users/$uid');
+    userReferance.update({key: value});
   }
 }

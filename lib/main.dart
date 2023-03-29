@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vdo/firebase_options.dart';
 import 'package:vdo/functions/auth_service.dart';
+import 'package:vdo/functions/user_data.dart';
 import 'package:vdo/functions/wrapper.dart';
 
 late DatabaseReference dbReference;
-// UserData userData = UserData();
+UserData userData = UserData();
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
