@@ -17,6 +17,7 @@ class DatabaseService {
     String email,
     String phoneNo,
     String profile,
+    String dob
   ) {
     final userReferance = dbReference.child('users/$uid');
 
@@ -25,6 +26,7 @@ class DatabaseService {
       'email': email,
       'phone': phoneNo,
       'profile': profile,
+      'dob':dob
     });
   }
 

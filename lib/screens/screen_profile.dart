@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:vdo/functions/auth_service.dart';
+import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/storage_service.dart';
 import 'package:vdo/functions/theme_color.dart';
 import 'package:vdo/functions/wrapper.dart';
@@ -23,6 +24,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
   String selectedFileName = '';
   String selectedFilePath = '';
   Storage storage = Storage();
+  DatabaseService dbService = DatabaseService();
   Widget getAvatar() {
     if (isLoading) {
       return const CircleAvatar(
@@ -144,17 +146,23 @@ class _ScreenProfileState extends State<ScreenProfile> {
                         isLoading = true;
                         selectedFileName = results.files.single.name;
                         selectedFilePath = results.files.single.path!;
-                        String fileName =
-                            "${userData.userid}_${userData.name}_$selectedFileName";
+                        String fileName = selectedFileName.trim();
+
                         storage
                             .uploadProfileImg(
                                 selectedFilePath, fileName, context)
-                            .then((value) {
-                          setState(() {
-                            isLoading = false;
-                            updatedProfile = true;
-                          });
-                        });
+                            .then(
+                          (value) {
+                            setState(
+                              () {
+                                dbService.updateDatabaseUser(
+                                    "profile", value, userData.userid, context);
+                                isLoading = false;
+                                updatedProfile = true;
+                              },
+                            );
+                          },
+                        );
                       });
                     }
                   },
@@ -216,13 +224,26 @@ class _ScreenProfileState extends State<ScreenProfile> {
                     ],
                   ),
                 ),
-
+                const SizedBox(
+                  height: 10,
+                ),
                 Text(
                   userData.name,
                   style: GoogleFonts.ubuntu(
                     color: ThemeColor.black,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Text(
+                  "Date of birth: ${userData.dob}",
+                  style: GoogleFonts.ubuntu(
+                    color: ThemeColor.black,
+                    fontSize: 20,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
                 const SizedBox(
@@ -289,13 +310,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: GestureDetector(
-                    onTap: () async {
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => ScreenAbout(topBar: true),
-                      //     ));
-                    },
+                    onTap: () {},
                     child: Container(
                       width: double.infinity,
                       height: 60,
@@ -304,7 +319,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                           borderRadius: BorderRadius.circular(20)),
                       child: const Center(
                         child: Text(
-                          "About",
+                          "Switch Theme",
                           style:
                               TextStyle(fontSize: 15, color: ThemeColor.black),
                         ),

@@ -9,6 +9,7 @@ import 'package:vdo/functions/theme_color.dart';
 
 import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';
+import 'package:vdo/screens/add_video.dart';
 import 'package:vdo/screens/screen_profile.dart';
 import 'package:video_player/video_player.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -41,6 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -221,98 +223,108 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: FirebaseAnimatedList(
-                  query: dbReference.child("vdos"),
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  defaultChild: const Center(
-                    child: LinearProgressIndicator(
-                      color: Colors.blue,
-                    ),
-                  ),
-                  itemBuilder: (context, snapshot, animation, index) {
-                    return Column(
-                      children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            _controller.pause();
-                            videoURL = snapshot.child('url').value.toString();
-                            fileName = snapshot.key.toString();
-                            if (snapshot
-                                    .child("isDownloaded")
-                                    .value
-                                    .toString() ==
-                                "true") {
-                              vs.getVideo(fileName);
-                              offlineVideo(fileName);
-                            }
-                            onlineVideo(videoURL);
-
-                            // setState(() {
-                            //   videoURL = snapshot.value.toString();
-                            // });
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              boxShadow: const [
-                                BoxShadow(
-                                    color: ThemeColor.shadow,
-                                    blurRadius: 10,
-                                    spreadRadius: 0.1,
-                                    offset: Offset(0, 10)),
-                              ],
-                              color: ThemeColor.offWhite,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            padding: const EdgeInsets.all(20.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      snapshot.key.toString(),
-                                      style: GoogleFonts.ubuntu(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      "${snapshot.child('url').value.toString().substring(0, 55)}...",
-                                      style: const TextStyle(
-                                        fontSize: 10,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                snapshot
-                                            .child('isDownloaded')
-                                            .value
-                                            .toString() ==
-                                        "true"
-                                    ? const Icon(
-                                        Icons.download_done_rounded,
-                                        color: ThemeColor.black,
-                                      )
-                                    : Container(),
-                              ],
-                            ),
+            Container(
+              height: height - 377,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FirebaseAnimatedList(
+                        query: dbReference.child("vdos"),
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        defaultChild: const Center(
+                          child: LinearProgressIndicator(
+                            color: Colors.blue,
                           ),
                         ),
-                      ],
-                    );
-                  },
+                        itemBuilder: (context, snapshot, animation, index) {
+                          return Column(
+                            children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  _controller.pause();
+                                  videoURL =
+                                      snapshot.child('url').value.toString();
+                                  fileName = snapshot.key.toString();
+                                  if (snapshot
+                                          .child("isDownloaded")
+                                          .value
+                                          .toString() ==
+                                      "true") {
+                                    vs.getVideo(fileName);
+                                    offlineVideo(fileName);
+                                  }
+                                  onlineVideo(videoURL);
+
+                                  // setState(() {
+                                  //   videoURL = snapshot.value.toString();
+                                  // });
+                                },
+                                child: Container(
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    boxShadow: const [
+                                      BoxShadow(
+                                          color: ThemeColor.shadow,
+                                          blurRadius: 10,
+                                          spreadRadius: 0.1,
+                                          offset: Offset(0, 10)),
+                                    ],
+                                    color: ThemeColor.offWhite,
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            snapshot.key.toString(),
+                                            style: GoogleFonts.ubuntu(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                            ),
+                                          ),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                            "${snapshot.child('url').value.toString().substring(0, 55)}...",
+                                            style: const TextStyle(
+                                              fontSize: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      snapshot
+                                                  .child('isDownloaded')
+                                                  .value
+                                                  .toString() ==
+                                              "true"
+                                          ? const Icon(
+                                              Icons.download_done_rounded,
+                                              color: ThemeColor.black,
+                                            )
+                                          : Container(),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -320,7 +332,14 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        backgroundColor: ThemeColor.primary,
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddVideo(),
+              ));
+        },
         child: const Icon(
           Icons.add,
         ),

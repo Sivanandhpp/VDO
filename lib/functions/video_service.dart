@@ -8,10 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
 class VideoService {
-  // String filename = "demo.mp4";
-  // final String _videoURL = "";
-  // "https://assets.mixkit.co/videos/preview/mixkit-clouds-and-blue-sky-2408-large.mp4";
-
+  
   Future<Directory> get getAppDir async {
     final appDocDir = await getApplicationDocumentsDirectory();
     return appDocDir;

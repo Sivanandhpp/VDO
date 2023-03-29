@@ -84,13 +84,13 @@ class _OtpScreenState extends State<OtpScreen> {
                 GestureDetector(
                   onTap: () {
                     auth.verifyOTP(context, widget.verificationId, otpCode!);
-                    // (String uid) {
+                  
                     Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => Wrapper(),
                         ));
-                    // }
+                    
                   },
                   child: Container(
                     height: 50,

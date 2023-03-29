@@ -29,7 +29,7 @@ class _SignupScreenState extends State<SignupScreen> {
   String selectedFilePath = '';
   Storage storage = Storage();
   DatabaseService dbService = DatabaseService();
-
+  DateTime selectedDate = DateTime.now();
   final TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -39,6 +39,19 @@ class _SignupScreenState extends State<SignupScreen> {
     // TODO: implement initState
     _phoneNoController = TextEditingController(text: widget.phoneNO);
     super.initState();
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: DateTime(2015, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+      });
+    }
   }
 
   @override
@@ -107,12 +120,16 @@ class _SignupScreenState extends State<SignupScreen> {
 
                       storage
                           .uploadProfileImg(selectedFilePath, fileName, context)
-                          .then((value) {
-                        setState(() {
-                          isLoading = false;
-                          updatedProfile = true;
-                        });
-                      });
+                          .then(
+                        (value) {
+                          setState(
+                            () {
+                              isLoading = false;
+                              updatedProfile = true;
+                            },
+                          );
+                        },
+                      );
                     });
                   }
                 },
@@ -278,7 +295,30 @@ class _SignupScreenState extends State<SignupScreen> {
                         ),
                       ),
                     ),
-
+                    const SizedBox(height: 16),
+                    GestureDetector(
+                      onTap: () {
+                        _selectDate(context);
+                      },
+                      child: Container(
+                        height: 55,
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10.0, vertical: 15),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(18.0)),
+                          color: ThemeColor.textFieldBgColor,
+                        ),
+                        child: Text(
+                          "Date of birth: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
+                          style: GoogleFonts.poppins(
+                            color: ThemeColor.black,
+                            fontSize: FontSize.medium,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     GestureDetector(
                       onTap: () {
@@ -296,6 +336,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               _emailController.text,
                               widget.phoneNO,
                               userData.profile,
+                              "${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
                               true);
                           // dbService.setDatabaseUser(
                           //     userData.userid,
