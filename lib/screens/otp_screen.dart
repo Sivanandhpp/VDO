@@ -85,7 +85,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   onTap: () {
                     auth.verifyOTP(context, widget.verificationId, otpCode!);
                     // (String uid) {
-                    Navigator.push(
+                    Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
                           builder: (context) => Wrapper(),
@@ -108,8 +108,11 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 TextButton(
                     onPressed: () {
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => LoginScreen(),));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ));
                     },
                     child: const Text(
                       "Change number?",

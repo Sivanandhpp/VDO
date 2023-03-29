@@ -1,14 +1,15 @@
+import 'package:vdo/functions/user_data.dart';
 import 'package:vdo/main.dart';
 
 class DatabaseService {
   // ErrorHandler errHandler = ErrorHandler();
   // UserData userData = UserData();
-  // Future<UserData> getDatabaseUser(String uid) async {
-  //   await dbReference.child('users/$uid').once().then(
-  //         (value) => userData.snapshotToClass(uid, value.snapshot),
-  //       );
-  //   return userData;
-  // }
+  Future<UserData> getDatabaseUser(String uid) async {
+    await dbReference.child('users/$uid').once().then(
+          (value) => userData.snapshotToClass(uid, value.snapshot),
+        );
+    return userData;
+  }
 
   setDatabaseUser(
     String uid,

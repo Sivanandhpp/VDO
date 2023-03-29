@@ -15,7 +15,7 @@ class AuthService {
     if (user == null) {
       return null;
     }
-    return User(user.uid, user.displayName, user.email);
+    return User(user.uid, user.displayName, user.email, user.phoneNumber);
   }
 
   Stream<User?>? get user {
@@ -62,6 +62,7 @@ class AuthService {
     auth.PhoneAuthCredential cred = auth.PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
     auth.User user = (await _firebaseAuth.signInWithCredential(cred)).user!;
+    
     // if (user != null) {
     // onSuccess(user.uid);
     // if (dbService.getUserInRtdb(user.uid)) {

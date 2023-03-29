@@ -3,13 +3,16 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/auth_service.dart';
+import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/storage_service.dart';
 import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/functions/wrapper.dart';
 import 'package:vdo/main.dart';
 import 'package:vdo/functions/font_sizes.dart';
 
 class SignupScreen extends StatefulWidget {
-  SignupScreen({super.key});
+  final String phoneNO;
+  SignupScreen({super.key, required this.phoneNO});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -21,12 +24,22 @@ class _SignupScreenState extends State<SignupScreen> {
   bool isLoading = false;
   bool updatedProfile = false;
   String profileUrl = 'null';
+
   String selectedFileName = '';
   String selectedFilePath = '';
   Storage storage = Storage();
+  DatabaseService dbService = DatabaseService();
+
   final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneNoController = TextEditingController();
+  TextEditingController _phoneNoController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _phoneNoController = TextEditingController(text: widget.phoneNO);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -90,8 +103,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       isLoading = true;
                       selectedFileName = results.files.single.name;
                       selectedFilePath = results.files.single.path!;
-                      String fileName =
-                          "${userData.userid}_${userData.name}_$selectedFileName";
+                      String fileName = selectedFileName.trim();
 
                       storage
                           .uploadProfileImg(selectedFilePath, fileName, context)
@@ -121,7 +133,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             backgroundColor: ThemeColor.white,
                             child: ClipOval(
                               child: CachedNetworkImage(
-                                imageUrl: "www.google.com",
+                                imageUrl: userData.profile,
                                 imageBuilder: (context, imageProvider) =>
                                     Container(
                                   decoration: BoxDecoration(
@@ -203,13 +215,14 @@ class _SignupScreenState extends State<SignupScreen> {
                       validator: (value) {
                         if (_phoneNoController.text.isEmpty) {
                           return "This field can't be empty";
-                        } else if (_phoneNoController.text.length != 10) {
+                        } else if (_phoneNoController.text.length < 10) {
                           return "Phone number must have 10 digits";
                         }
                       },
                       style: GoogleFonts.poppins(
                         color: ThemeColor.black,
                       ),
+                      readOnly: true,
                       cursorColor: ThemeColor.primary,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
@@ -238,10 +251,10 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (_emailController.text.isEmpty) {
                           return "This field can't be empty";
                         } else if (_emailController.text.split('@').last !=
-                                'nerve.com' &&
+                                'vdo.com' &&
                             _emailController.text.split('@').last !=
                                 'gmail.com') {
-                          return "Enter a valid E-Mail ID";
+                          return "Enter a valid G-Mail ID";
                         }
                       },
                       style: GoogleFonts.poppins(
@@ -277,7 +290,27 @@ class _SignupScreenState extends State<SignupScreen> {
 
                           //     context);
                           // ignore: use_build_context_synchronously
-                          Navigator.pop(context);
+                          userData.setUserData(
+                              userData.userid,
+                              _nameController.text,
+                              _emailController.text,
+                              widget.phoneNO,
+                              userData.profile,
+                              true);
+                          // dbService.setDatabaseUser(
+                          //     userData.userid,
+                          //     _nameController.text,
+                          //     _emailController.text,
+                          //     widget.phoneNO,
+                          //     userData.profile);
+
+                          // dbService.updateDatabaseUser('profile',
+                          //     userData.profile, userData.userid, context);
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => Wrapper(),
+                              ));
                         }
                       },
                       child: Container(
