@@ -224,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             Container(
-              height: height - 377,
+              height: height - 400,
               child: SingleChildScrollView(
                 child: Column(
                   children: [
@@ -257,9 +257,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                           .toString() ==
                                       "true") {
                                     vs.getVideo(fileName);
-                                    offlineVideo(fileName);
+                                    offlineVideo(fileName,videoURL);
+                                  } else {
+                                    onlineVideo(videoURL);
                                   }
-                                  onlineVideo(videoURL);
 
                                   // setState(() {
                                   //   videoURL = snapshot.value.toString();
@@ -298,7 +299,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                             height: 5,
                                           ),
                                           Text(
-                                            "${snapshot.child('url').value.toString().substring(0, 55)}...",
+                                            snapshot
+                                                        .child('url')
+                                                        .value
+                                                        .toString()
+                                                        .length >
+                                                    55
+                                                ? "${snapshot.child('url').value.toString().substring(0, 55)}..."
+                                                : snapshot
+                                                    .child('url')
+                                                    .value
+                                                    .toString(),
                                             style: const TextStyle(
                                               fontSize: 10,
                                             ),
@@ -357,8 +368,14 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  offlineVideo(String fileName) {
+  offlineVideo(String fileName, String link) {
     String filePathString = "/storage/emulated/0/VDO/$fileName.mp4";
+    File(filePathString).exists().then((value) {
+      if (!value) {
+        onlineVideo(link);
+      }
+    });
+
     final File filePath = File(filePathString);
     final controller = VideoPlayerController.file(filePath);
     _controller = controller;
