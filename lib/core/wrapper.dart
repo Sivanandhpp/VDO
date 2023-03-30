@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/user_data.dart';
+import 'package:vdo/core/db_service.dart';
+import 'package:vdo/core/user_data.dart';
 import 'package:vdo/main.dart';
-import 'package:vdo/player/widget/video_player_page.dart';
 import 'package:vdo/screens/home_screen.dart';
-import 'package:vdo/functions/auth_service.dart';
+import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/screens/login_screen.dart';
-import 'package:vdo/functions/user_model.dart';
+import 'package:vdo/core/user_model.dart';
 import 'package:vdo/screens/signup_screen.dart';
 
 // ignore: must_be_immutable, use_key_in_widget_constructors
@@ -35,7 +34,7 @@ class Wrapper extends StatelessWidget {
                             AsyncSnapshot<UserData?> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
-                            return const VideoPlayerPage();
+                            return const HomeScreen();
                           }
                           return const Center(
                               child: CircularProgressIndicator());
@@ -48,7 +47,7 @@ class Wrapper extends StatelessWidget {
               },
             );
           }
-          return LoginScreen();
+          return const LoginScreen();
         }
         return const Center(child: CircularProgressIndicator());
       },

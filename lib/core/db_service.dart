@@ -1,4 +1,4 @@
-import 'package:vdo/functions/user_data.dart';
+import 'package:vdo/core/user_data.dart';
 import 'package:vdo/main.dart';
 
 class DatabaseService {

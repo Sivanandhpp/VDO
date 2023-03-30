@@ -100,7 +100,7 @@ class _VideoPlayerSliderState extends State<VideoPlayerSlider> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    
     VideoPlayerUtils.removePositionListener(this);
     super.dispose();
   }

@@ -1,7 +1,7 @@
-import 'package:vdo/functions/db_service.dart';
+import 'package:vdo/core/db_service.dart';
 
 class UserData {
-  late String name, email, phoneNo, password, userid, profile,dob;
+  late String name, email, phoneNo, password, userid, profile, dob;
 
   DatabaseService dbService = DatabaseService();
 
@@ -14,7 +14,7 @@ class UserData {
   }
 
   setUserData(String uid, String setname, String setemail, String setphoneNo,
-      String setprofile,String setdob, bool setData) {
+      String setprofile, String setdob, bool setData) {
     userid = uid;
     name = setname;
     email = setemail;
@@ -24,7 +24,8 @@ class UserData {
 
     if (setData) {
       //SET DATA TO REALTIME DATABASE WHILE SIGN UP
-      dbService.setDatabaseUser(uid, setname, setemail, setphoneNo, profile, dob);
+      dbService.setDatabaseUser(
+          uid, setname, setemail, setphoneNo, profile, dob);
     }
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vdo/functions/db_service.dart';
+import 'package:vdo/core/db_service.dart';
 import 'package:flutter/services.dart';
 import 'package:vdo/theme/theme_color.dart';
 
@@ -16,7 +16,8 @@ class AddVideo extends StatelessWidget {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10.0, vertical: 20.0),
             child: Column(
               children: [
                 GestureDetector(
@@ -31,6 +32,7 @@ class AddVideo extends StatelessWidget {
                             left: 0, right: 10, top: 10, bottom: 10),
                         child: const Icon(
                           Icons.arrow_back_ios_new,
+                          size: 20,
                           color: Colors.black,
                         ),
                       ),
@@ -38,7 +40,7 @@ class AddVideo extends StatelessWidget {
                         "Add Video",
                         style: GoogleFonts.ubuntu(
                           color: ThemeColor.black,
-                          fontSize: 26,
+                          fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -111,7 +113,7 @@ class AddVideo extends StatelessWidget {
                 Row(
                   children: [
                     Container(
-                      width: width - 86,
+                      width: width - 90,
                       height: 60,
                       decoration: BoxDecoration(
                         boxShadow: const [
@@ -197,7 +199,9 @@ class AddVideo extends StatelessWidget {
                             style: TextStyle(color: ThemeColor.white),
                           )));
                     } else {
-                      dbService.updateVDO(_fileNameTextController.text.replaceAll(' ', ''), "url",
+                      dbService.updateVDO(
+                          _fileNameTextController.text.replaceAll(' ', ''),
+                          "url",
                           _fileLinkTextController.text);
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           behavior: SnackBarBehavior.floating,

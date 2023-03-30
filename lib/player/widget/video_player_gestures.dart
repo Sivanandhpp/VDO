@@ -30,7 +30,7 @@ class _VideoPlayerGesturesState extends State<VideoPlayerGestures> {
   final List<Widget> _children = [];
   @override
   void initState() {
-    // TODO: implement initState
+   
     _percentageWidget = PercentageWidget();
     _children.addAll(widget.children);
     _children.add(_percentageWidget);
@@ -235,7 +235,7 @@ class _PercentageWidgetState extends State<PercentageWidget> {
   bool _offstage = true;
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     widget.percentageCallback = (percentage) {
       _percentage = percentage;

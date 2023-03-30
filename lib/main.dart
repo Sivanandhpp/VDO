@@ -3,10 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:vdo/firebase_options.dart';
-import 'package:vdo/functions/auth_service.dart';
-import 'package:vdo/functions/user_data.dart';
-import 'package:vdo/functions/wrapper.dart';
-import 'package:vdo/theme/app_theme.dart';
+import 'package:vdo/core/auth_service.dart';
+import 'package:vdo/core/user_data.dart';
+import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/theme/theme_color.dart';
 
 late DatabaseReference dbReference;

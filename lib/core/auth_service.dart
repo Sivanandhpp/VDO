@@ -1,14 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:flutter/material.dart';
-import 'package:vdo/functions/user_model.dart';
+import 'package:vdo/core/err_handler.dart';
+import 'package:vdo/core/user_model.dart';
 import 'package:vdo/screens/otp_screen.dart';
 
-// import 'err_handler.dart';
 
 class AuthService {
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
   // DatabaseService dbService = DatabaseService();
-  // ErrorHandler errHandler = ErrorHandler();
+  ErrorHandler errHandler = ErrorHandler();
   var verificationId = '';
 
   User? _userFromFirebase(auth.User? user) {
@@ -29,9 +29,7 @@ class AuthService {
         await _firebaseAuth.signInWithCredential(credential);
       },
       verificationFailed: (auth.FirebaseAuthException e) {
-        if (e.code == 'invalid-phone-number') {
-          print('The provided phone number is not valid.');
-        }
+        errHandler.fromErrorCode(e, context);
       },
       codeSent: (String verificationId, int? resendToken) async {
         Navigator.pushReplacement(
@@ -62,7 +60,7 @@ class AuthService {
     auth.PhoneAuthCredential cred = auth.PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
     auth.User user = (await _firebaseAuth.signInWithCredential(cred)).user!;
-    
+
     // if (user != null) {
     // onSuccess(user.uid);
     // if (dbService.getUserInRtdb(user.uid)) {

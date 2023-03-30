@@ -15,7 +15,7 @@ class _LockIconState extends State<LockIcon> {
   double _opacity = 1.0;
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     widget.opacityCallback = (appear){
       if(TempValue.isLocked) return;

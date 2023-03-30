@@ -24,7 +24,7 @@ class _VideoPlayerTopState extends State<VideoPlayerTop> {
       MediaQuery.of(context).orientation == Orientation.landscape;
   @override
   void initState() {
-    // TODO: implement initState
+    
     super.initState();
     widget.opacityCallback = (appear) {
       _opacity = appear ? 1.0 : 0.0;

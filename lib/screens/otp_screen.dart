@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
-import 'package:vdo/functions/auth_service.dart';
-import 'package:vdo/functions/db_service.dart';
+import 'package:vdo/core/auth_service.dart';
+import 'package:vdo/core/db_service.dart';
 import 'package:vdo/theme/theme_color.dart';
-import 'package:vdo/functions/wrapper.dart';
+import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/screens/login_screen.dart';
 
 class OtpScreen extends StatefulWidget {
   final String verificationId;
   final String phoneNO;
-  OtpScreen({super.key, required this.verificationId, required this.phoneNO});
+  const OtpScreen({super.key, required this.verificationId, required this.phoneNO});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -111,7 +111,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => LoginScreen(),
+                            builder: (context) => const LoginScreen(),
                           ));
                     },
                     child: const Text(

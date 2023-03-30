@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vdo/functions/db_service.dart';
+import 'package:vdo/core/db_service.dart';
 import 'package:vdo/theme/theme_color.dart';
 
-import 'package:vdo/functions/video_service.dart';
+import 'package:vdo/core/video_service.dart';
 import 'package:vdo/main.dart';
 import 'package:video_player/video_player.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -79,7 +79,7 @@ class _VideoAppState extends State<VideoApp> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
+                    SizedBox(
                       width: width - 65,
                       child: VideoProgressIndicator(_controller,
                           allowScrubbing: true,
@@ -128,7 +128,6 @@ class _VideoAppState extends State<VideoApp> {
                         ),
                         IconButton(
                           onPressed: () {
-                            print("click");
                             vs.download(videoURL, fileName);
                             DatabaseService dbservice = DatabaseService();
                             dbservice.updateVDO(

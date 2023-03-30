@@ -3,11 +3,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:vdo/functions/auth_service.dart';
-import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/storage_service.dart';
+import 'package:vdo/core/auth_service.dart';
+import 'package:vdo/core/db_service.dart';
+import 'package:vdo/core/storage_service.dart';
 import 'package:vdo/theme/theme_color.dart';
-import 'package:vdo/functions/wrapper.dart';
+import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/main.dart';
 
 class ScreenProfile extends StatefulWidget {
@@ -104,6 +104,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                                     left: 0, right: 10, top: 10, bottom: 10),
                                 child: const Icon(
                                   Icons.arrow_back_ios_new,
+                                  size: 20,
                                   color: Colors.black,
                                 ),
                               ),
@@ -111,7 +112,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                                 "Profile",
                                 style: GoogleFonts.ubuntu(
                                   color: ThemeColor.black,
-                                  fontSize: 26,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

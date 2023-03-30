@@ -2,17 +2,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:vdo/functions/auth_service.dart';
-import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/storage_service.dart';
+import 'package:vdo/core/auth_service.dart';
+import 'package:vdo/core/db_service.dart';
+import 'package:vdo/core/storage_service.dart';
 import 'package:vdo/theme/theme_color.dart';
-import 'package:vdo/functions/wrapper.dart';
+import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/main.dart';
-import 'package:vdo/functions/font_sizes.dart';
 
 class SignupScreen extends StatefulWidget {
   final String phoneNO;
-  SignupScreen({super.key, required this.phoneNO});
+  const SignupScreen({super.key, required this.phoneNO});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -36,7 +35,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     _phoneNoController = TextEditingController(text: widget.phoneNO);
     super.initState();
   }
@@ -72,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     "New here? Welcome!",
                     style: GoogleFonts.poppins(
                       color: ThemeColor.black,
-                      fontSize: FontSize.xxLarge,
+                      fontSize: 22,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -86,7 +85,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       "Please fill the form to continue.",
                       style: GoogleFonts.poppins(
                         color: ThemeColor.grey,
-                        fontSize: FontSize.medium,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -205,6 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (_nameController.text.isEmpty) {
                           return "This field can't be empty";
                         }
+                   
                       },
                       style: GoogleFonts.poppins(
                         color: ThemeColor.black,
@@ -218,7 +218,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         hintText: "Full name",
                         hintStyle: GoogleFonts.poppins(
                           color: ThemeColor.textFieldHintColor,
-                          fontSize: FontSize.medium,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
                         border: const OutlineInputBorder(
@@ -251,7 +251,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         hintText: "Phone No",
                         hintStyle: GoogleFonts.poppins(
                           color: ThemeColor.textFieldHintColor,
-                          fontSize: FontSize.medium,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
                         border: const OutlineInputBorder(
@@ -288,7 +288,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         hintText: "E-Mail",
                         hintStyle: GoogleFonts.poppins(
                           color: ThemeColor.textFieldHintColor,
-                          fontSize: FontSize.medium,
+                          fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
                         border: const OutlineInputBorder(
@@ -315,7 +315,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           "Date of birth: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
                           style: GoogleFonts.poppins(
                             color: ThemeColor.black,
-                            fontSize: FontSize.medium,
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -377,7 +377,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   onPressed: () {
                     auth.signOut();
                   },
-                  child: Text("Signout")),
+                  child: const Text("Signout")),
             ],
           ),
         ),

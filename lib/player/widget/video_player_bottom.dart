@@ -18,7 +18,7 @@ class _VideoPlayerBottomState extends State<VideoPlayerBottom> {
 
   @override
   void initState() {
-    // TODO: implement initState
+   
     super.initState();
     widget.opacityCallback = (appear) {
       _opacity = appear ? 1.0 : 0.0;
@@ -95,7 +95,7 @@ class _VideoPlayerButtonState extends State<VideoPlayerButton>
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 250));
     if (VideoPlayerUtils.state == VideoPlayerState.playing) {
@@ -117,7 +117,7 @@ class _VideoPlayerButtonState extends State<VideoPlayerButton>
 
   @override
   void dispose() {
-    // TODO: implement dispose
+    
     VideoPlayerUtils.removeStatusListener(this);
     _animationController.dispose();
     super.dispose();
