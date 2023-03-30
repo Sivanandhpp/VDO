@@ -64,7 +64,7 @@ class AddVideo extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
-                    child: Text("Add direct download link for best working.",
+                    child: Text("Paste direct download link for best working.",
                         style: GoogleFonts.ubuntu(
                             fontSize: 15,
                             fontWeight: FontWeight.w500,
@@ -197,7 +197,7 @@ class AddVideo extends StatelessWidget {
                             style: TextStyle(color: ThemeColor.white),
                           )));
                     } else {
-                      dbService.updateVDO(_fileNameTextController.text, "url",
+                      dbService.updateVDO(_fileNameTextController.text.replaceAll(' ', ''), "url",
                           _fileLinkTextController.text);
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           behavior: SnackBarBehavior.floating,

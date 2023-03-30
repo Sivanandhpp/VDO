@@ -61,7 +61,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _listofFiles();
 
     VideoPlayerUtils.playerHandle(
-        'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa',
+        'https://manusebastian.com/assets/img/content/ajio/ajiofirst.mp4',
         autoPlay: false);
 
     VideoPlayerUtils.initializedListener(
@@ -200,13 +200,12 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                 return Column(
                                   children: [
                                     const SizedBox(
-                                      height: 10,
+                                      height: 5,
                                     ),
                                     GestureDetector(
                                       onTap: () {
                                         videoName = snapshot.key.toString();
                                         if (fileList.contains(videoName)) {
-                                         
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                                   behavior:
@@ -225,7 +224,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                                         color:
                                                             ThemeColor.white),
                                                   )));
- vs.getVideo(videoName);
+                                          vs.getVideo(videoName);
                                           _changeVideo(
                                               "/storage/emulated/0/VDO/decrypted/$videoName.mp4");
                                         } else {
@@ -273,6 +272,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                       },
                                       child: Container(
                                         width: double.infinity,
+                                        height: 70,
                                         decoration: BoxDecoration(
                                             boxShadow: const [
                                               BoxShadow(
@@ -287,14 +287,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                             border: Border.all(
                                                 color: ThemeColor.primary,
                                                 width: 0.1)),
-                                        padding: const EdgeInsets.all(20.0),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   snapshot.key.toString(),
@@ -344,7 +349,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                                               ThemeColor
                                                                   .primary,
                                                           content: Text(
-                                                            'Video stored in internal memory',
+                                                            'Video already downloaded',
                                                             style: TextStyle(
                                                                 color:
                                                                     ThemeColor
@@ -361,6 +366,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                                   )
                                                 : IconButton(
                                                     onPressed: () {
+                                                      
                                                       ScaffoldMessenger.of(context).showSnackBar(
                                                           SnackBar(
                                                               behavior:
@@ -375,7 +381,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                                                   ThemeColor
                                                                       .primary,
                                                               content: Text(
-                                                                'Downloading ${snapshot.key.toString()} video...',
+                                                                'Downloading video: ${snapshot.key.toString()}...',
                                                                 style: const TextStyle(
                                                                     color: ThemeColor
                                                                         .white),

@@ -147,7 +147,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                         isLoading = true;
                         selectedFileName = results.files.single.name;
                         selectedFilePath = results.files.single.path!;
-                        String fileName = selectedFileName.trim();
+                        String fileName = selectedFileName.replaceAll(' ', '');
 
                         storage
                             .uploadProfileImg(
