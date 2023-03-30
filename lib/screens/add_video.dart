@@ -5,8 +5,8 @@ import 'package:vdo/functions/theme_color.dart';
 
 class AddVideo extends StatelessWidget {
   AddVideo({super.key});
-  TextEditingController _fileNameTextController = TextEditingController();
-  TextEditingController _fileLinkTextController = TextEditingController();
+  final TextEditingController _fileNameTextController = TextEditingController();
+  final TextEditingController _fileLinkTextController = TextEditingController();
   DatabaseService dbService = DatabaseService();
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class AddVideo extends StatelessWidget {
         body: SafeArea(
             child: SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
             GestureDetector(
@@ -110,9 +110,43 @@ class AddVideo extends StatelessWidget {
             ),
             GestureDetector(
               onTap: () {
-                dbService.updateVDO(_fileNameTextController.text, "url",
-                    _fileLinkTextController.text);
-                Navigator.pop(context);
+                if (_fileNameTextController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(15.0))),
+                      backgroundColor: ThemeColor.primary,
+                      content: Text(
+                        'Please enter file name',
+                        style: TextStyle(color: ThemeColor.white),
+                      )));
+                } else if (_fileLinkTextController.text.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(15.0))),
+                      backgroundColor: ThemeColor.primary,
+                      content: Text(
+                        'Please paste file link',
+                        style: TextStyle(color: ThemeColor.white),
+                      )));
+                } else {
+                  dbService.updateVDO(_fileNameTextController.text, "url",
+                      _fileLinkTextController.text);
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      behavior: SnackBarBehavior.floating,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(15.0))),
+                      backgroundColor: ThemeColor.primary,
+                      content: Text(
+                        'Video added successfully!',
+                        style: TextStyle(color: ThemeColor.white),
+                      )));
+                  Navigator.pop(context);
+                }
               },
               child: Container(
                 height: 50,

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/user_data.dart';
 import 'package:vdo/main.dart';
+import 'package:vdo/player/widget/video_player_page.dart';
 import 'package:vdo/screens/home_screen.dart';
 import 'package:vdo/functions/auth_service.dart';
 import 'package:vdo/screens/login_screen.dart';
@@ -34,7 +35,7 @@ class Wrapper extends StatelessWidget {
                             AsyncSnapshot<UserData?> snapshot) {
                           if (snapshot.connectionState ==
                               ConnectionState.done) {
-                            return const HomeScreen();
+                            return const VideoPlayerPage();
                           }
                           return const Center(
                               child: CircularProgressIndicator());
