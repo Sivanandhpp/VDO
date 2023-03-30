@@ -5,7 +5,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 
 import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';
@@ -203,7 +203,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         IconButton(
                           onPressed: () {
-                           
                             vs.download(videoURL, fileName);
                             DatabaseService dbservice = DatabaseService();
                             dbservice.updateVDO(
@@ -257,7 +256,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           .toString() ==
                                       "true") {
                                     vs.getVideo(fileName);
-                                    offlineVideo(fileName,videoURL);
+                                    offlineVideo(fileName, videoURL);
                                   } else {
                                     onlineVideo(videoURL);
                                   }

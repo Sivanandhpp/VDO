@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:vdo/functions/auth_service.dart';
 import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/storage_service.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/functions/wrapper.dart';
 import 'package:vdo/main.dart';
 
@@ -18,6 +18,7 @@ class ScreenProfile extends StatefulWidget {
 }
 
 class _ScreenProfileState extends State<ScreenProfile> {
+  bool isLight = true;
   bool isLoading = false;
   bool updatedProfile = false;
   String profileUrl = 'null';
@@ -310,7 +311,21 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40.0),
                   child: GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      // if (isLight) {
+                      //   MyApp.of(context).changeTheme(ThemeMode.dark);
+                      //   setState(() {
+                      //     isLight = false;
+                      //   });
+                      // } else {
+                      //   MyApp.of(context).changeTheme(ThemeMode.light);
+                      //   setState(() {
+                      //     isLight = true;
+                      //   });
+                      // }
+
+                      // MyApp.of(context).changeTheme(ThemeMode.system);
+                    },
                     child: Container(
                       width: double.infinity,
                       height: 60,

@@ -6,6 +6,8 @@ import 'package:vdo/firebase_options.dart';
 import 'package:vdo/functions/auth_service.dart';
 import 'package:vdo/functions/user_data.dart';
 import 'package:vdo/functions/wrapper.dart';
+import 'package:vdo/theme/app_theme.dart';
+import 'package:vdo/theme/theme_color.dart';
 
 late DatabaseReference dbReference;
 UserData userData = UserData();
@@ -30,11 +32,17 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Nerve',
+          title: 'VDO',
           theme: ThemeData(
-            scaffoldBackgroundColor: Colors.white,
-            primarySwatch: Colors.blue,
-          ),
+              primaryColor: ThemeColor.primary,
+              scaffoldBackgroundColor: ThemeColor.scaffoldBgColor),
+          // darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.system,
+
+          // ThemeData(
+          //   scaffoldBackgroundColor: Colors.white,
+          //   primarySwatch: Colors.blue,
+          // ),
           home: Wrapper()),
     );
   }

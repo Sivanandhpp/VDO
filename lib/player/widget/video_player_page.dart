@@ -6,7 +6,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';
 import 'package:vdo/player/utils/temp_value.dart';
@@ -63,6 +63,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     VideoPlayerUtils.playerHandle(
         'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa',
         autoPlay: false);
+
     VideoPlayerUtils.initializedListener(
         key: this,
         listener: (initialize, widget) {
@@ -205,6 +206,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                       onTap: () {
                                         videoName = snapshot.key.toString();
                                         if (fileList.contains(videoName)) {
+                                         
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(SnackBar(
                                                   behavior:
@@ -218,15 +220,33 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                                   backgroundColor:
                                                       ThemeColor.primary,
                                                   content: Text(
-                                                    'Decrypting $videoName video...',
+                                                    'Loading video: $videoName from storage...',
                                                     style: const TextStyle(
                                                         color:
                                                             ThemeColor.white),
                                                   )));
-                                          vs.getVideo(videoName);
+ vs.getVideo(videoName);
                                           _changeVideo(
-                                              "/storage/emulated/0/VDO/decrypted/Wrap.mp4");
+                                              "/storage/emulated/0/VDO/decrypted/$videoName.mp4");
                                         } else {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      15.0))),
+                                                  backgroundColor:
+                                                      ThemeColor.primary,
+                                                  content: Text(
+                                                    'Loading video: $videoName from network...',
+                                                    style: const TextStyle(
+                                                        color:
+                                                            ThemeColor.white),
+                                                  )));
                                           videoURL = snapshot
                                               .child('url')
                                               .value
@@ -235,7 +255,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                         }
 
                                         setState(() {
-                                          _top!.setVideoName(videoName);
+                                          _top?.setVideoName(videoName);
                                         });
                                         //   _controller.pause();
                                         //
@@ -254,17 +274,19 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                       child: Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          boxShadow: const [
-                                            BoxShadow(
-                                                color: ThemeColor.shadow,
-                                                blurRadius: 10,
-                                                spreadRadius: 0.1,
-                                                offset: Offset(0, 10)),
-                                          ],
-                                          color: ThemeColor.offWhite,
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
+                                            boxShadow: const [
+                                              BoxShadow(
+                                                  color: ThemeColor.shadow,
+                                                  blurRadius: 10,
+                                                  spreadRadius: 0.1,
+                                                  offset: Offset(0, 10)),
+                                            ],
+                                            color: ThemeColor.offWhite,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: ThemeColor.primary,
+                                                width: 0.1)),
                                         padding: const EdgeInsets.all(20.0),
                                         child: Row(
                                           mainAxisAlignment:

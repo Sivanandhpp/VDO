@@ -4,7 +4,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 
 import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';

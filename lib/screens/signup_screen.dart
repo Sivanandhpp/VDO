@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/auth_service.dart';
 import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/storage_service.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/functions/wrapper.dart';
 import 'package:vdo/main.dart';
 import 'package:vdo/functions/font_sizes.dart';

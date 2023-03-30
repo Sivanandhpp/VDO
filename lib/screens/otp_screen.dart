@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:vdo/functions/auth_service.dart';
 import 'package:vdo/functions/db_service.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/functions/wrapper.dart';
 import 'package:vdo/screens/login_screen.dart';
 

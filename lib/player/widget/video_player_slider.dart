@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
-import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/player/utils/video_player_utils.dart';
 
 class VideoPlayerSlider extends StatefulWidget {
