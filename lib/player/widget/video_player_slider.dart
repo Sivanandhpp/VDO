@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
+import 'package:vdo/functions/theme_color.dart';
 import 'package:vdo/player/utils/video_player_utils.dart';
 
 class VideoPlayerSlider extends StatefulWidget {
@@ -13,12 +14,11 @@ class _VideoPlayerSliderState extends State<VideoPlayerSlider> {
   double _sliderValue = 0.0;
   String _currentDuration = "00:00";
   ui.Image? _customImage;
-  bool _onChanged = false; 
+  bool _onChanged = false;
 
   @override
   void initState() {
- 
-     // Note, after switching between horizontal and vertical screens, to refresh the widget, the playback progress needs to be set to the current position instead of 0
+    // Note, after switching between horizontal and vertical screens, to refresh the widget, the playback progress needs to be set to the current position instead of 0
     if (VideoPlayerUtils.isInitialized) {
       _sliderValue = VideoPlayerUtils.position.inMilliseconds /
           VideoPlayerUtils.duration.inMilliseconds;
@@ -51,7 +51,7 @@ class _VideoPlayerSliderState extends State<VideoPlayerSlider> {
                   data: SliderThemeData(
                     trackHeight: 8,
                     inactiveTrackColor: Colors.grey,
-                    activeTrackColor: Colors.greenAccent,
+                    activeTrackColor: ThemeColor.secondary,
                     thumbShape: SliderThumbImage(image: _customImage),
                     trackShape: const CustomTrackShape(),
                   ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vdo/player/other/temp_value.dart';
+import 'package:vdo/player/utils/temp_value.dart';
 
 
 // ignore: must_be_immutable

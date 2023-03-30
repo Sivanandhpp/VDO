@@ -1,11 +1,13 @@
 import 'dart:ui';
+import 'dart:io' as io;
+import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/theme_color.dart';
 import 'package:vdo/main.dart';
-import 'package:vdo/player/other/temp_value.dart';
+import 'package:vdo/player/utils/temp_value.dart';
 import 'package:vdo/player/utils/video_player_utils.dart';
 import 'package:vdo/player/widget/video_player_bottom.dart';
 import 'package:vdo/player/widget/video_player_center.dart';
@@ -21,6 +23,9 @@ class VideoPlayerPage extends StatefulWidget {
 }
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
+  late String directory;
+  List file = [];
+  List<String> fileList = [];
   bool get _isFullScreen =>
       MediaQuery.of(context).orientation == Orientation.landscape;
   Size get _window => MediaQueryData.fromWindow(window).size;
@@ -32,10 +37,25 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   LockIcon? _lockIcon;
   String videoName = 'Video';
   String videoURL = '';
+
+  void _listofFiles() async {
+    directory = (await getApplicationDocumentsDirectory()).path;
+    setState(() {
+      file = io.Directory("/storage/emulated/0/VDO").listSync();
+      for (int i = 0; i < file.length; i++) {
+        String s = file[i].toString();
+        fileList.add("${s.substring(0, s.indexOf('.')).split('/').last}");
+      }
+
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _listofFiles();
+
     VideoPlayerUtils.playerHandle(
         'https://drive.google.com/uc?export=download&id=1wP1bPKF85PTWiGkFboj2d95g6aNop5Sa',
         autoPlay: false);
@@ -86,7 +106,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
+                                  builder: (context) => const HomeScreen(),
                                 ));
                           },
                           child: Container(
@@ -254,16 +274,16 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                                 ),
                                               ],
                                             ),
-                                            snapshot
-                                                        .child('isDownloaded')
-                                                        .value
-                                                        .toString() ==
-                                                    "true"
+                                            fileList.contains(
+                                                    snapshot.key.toString())
                                                 ? const Icon(
                                                     Icons.download_done_rounded,
                                                     color: ThemeColor.black,
                                                   )
-                                                : Container(),
+                                                : const Icon(
+                                                    Icons.cloud,
+                                                    color: ThemeColor.black,
+                                                  )
                                           ],
                                         ),
                                       ),

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:vdo/player/other/temp_value.dart';
+import 'package:vdo/player/utils/temp_value.dart';
 import 'package:vdo/player/utils/video_player_utils.dart';
 
 class VideoPlayerGestures extends StatefulWidget {
