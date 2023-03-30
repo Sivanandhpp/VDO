@@ -8,7 +8,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:encrypt/encrypt.dart' as enc;
 
 class VideoService {
-  
   Future<Directory> get getAppDir async {
     final appDocDir = await getApplicationDocumentsDirectory();
     return appDocDir;
@@ -20,6 +19,10 @@ class VideoService {
       return externalDir;
     } else {
       await Directory('/storage/emulated/0/VDO').create(recursive: true);
+      await Directory('/storage/emulated/0/VDO/encrypted')
+          .create(recursive: true);
+      await Directory('/storage/emulated/0/VDO/decrypted')
+          .create(recursive: true);
       final externalDir = Directory('/storage/emulated/0/VDO');
       return externalDir;
     }
@@ -35,14 +38,16 @@ class VideoService {
     return _downloadAndCreate(videoURL, d, fileName);
   }
 
-  Future<bool?> getVideo(String fileName) async {
+ getVideo(String fileName) async {
     //To access visible directory
     Directory d = await getExternalVisibleDir;
 
     //App directory : will not be visible but secured
     // Directory d = await getAppDir;
-
-    return _getNormalFile(d, fileName);
+  
+   
+   _getNormalFile(d, fileName);
+  
   }
 
   Future<bool> _downloadAndCreate(String url, Directory d, filename) async {
@@ -51,7 +56,8 @@ class VideoService {
       var resp = await http.get(Uri.parse(url));
 
       var encResult = _encryptData(resp.bodyBytes);
-      String p = await _writeData(encResult, '${d.path}/$filename.aes');
+      String p =
+          await _writeData(encResult, '${d.path}/encrypted/$filename.aes');
       // String p = await _writeData(encResult, '/storage/emulated/0/VDO/demo.mp4.aes');
       print("file encrypted successfully: $p");
       return true;
@@ -61,14 +67,13 @@ class VideoService {
     }
   }
 
-  _getNormalFile(Directory d, filename) async {
-    Uint8List encData = await _readData('${d.path}/$filename.aes');
+   _getNormalFile(Directory d, filename) async {
+    Uint8List encData = await _readData('${d.path}/encrypted/$filename.aes');
     // Uint8List encData = await _readData('/storage/emulated/0/VDO/demo.mp4.aes');
     var plainData = await _decryptData(encData);
-    String p = await _writeData(plainData, '${d.path}/$filename.mp4');
+    String p = await _writeData(plainData, '${d.path}/decrypted/$filename.mp4');
     // p = await _writeData(plainData, '/storage/emulated/0/VDO/demo.mp4');
     print("file decrypted successfully: $p");
-    return p;
   }
 
   _encryptData(plainString) {

@@ -5,7 +5,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:vdo/functions/db_service.dart';
 import 'package:vdo/functions/theme_color.dart';
+import 'package:vdo/functions/video_service.dart';
 import 'package:vdo/main.dart';
 import 'package:vdo/player/utils/temp_value.dart';
 import 'package:vdo/player/utils/video_player_utils.dart';
@@ -13,6 +15,7 @@ import 'package:vdo/player/widget/video_player_bottom.dart';
 import 'package:vdo/player/widget/video_player_center.dart';
 import 'package:vdo/player/widget/video_player_gestures.dart';
 import 'package:vdo/player/widget/video_player_top.dart';
+import 'package:vdo/screens/add_video.dart';
 import 'package:vdo/screens/home_screen.dart';
 import 'package:vdo/screens/screen_profile.dart';
 
@@ -23,6 +26,8 @@ class VideoPlayerPage extends StatefulWidget {
 }
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
+  DatabaseService dbservice = DatabaseService();
+  VideoService vs = VideoService();
   late String directory;
   List file = [];
   List<String> fileList = [];
@@ -41,12 +46,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
   void _listofFiles() async {
     directory = (await getApplicationDocumentsDirectory()).path;
     setState(() {
-      file = io.Directory("/storage/emulated/0/VDO").listSync();
+      file = io.Directory("/storage/emulated/0/VDO/encrypted").listSync();
       for (int i = 0; i < file.length; i++) {
         String s = file[i].toString();
         fileList.add("${s.substring(0, s.indexOf('.')).split('/').last}");
       }
-
     });
   }
 
@@ -199,12 +203,36 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                     ),
                                     GestureDetector(
                                       onTap: () {
-                                        videoURL = snapshot
-                                            .child('url')
-                                            .value
-                                            .toString();
                                         videoName = snapshot.key.toString();
-                                        _changeVideo(videoURL);
+                                        if (fileList.contains(videoName)) {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      15.0))),
+                                                  backgroundColor:
+                                                      ThemeColor.primary,
+                                                  content: Text(
+                                                    'Decrypting $videoName video...',
+                                                    style: const TextStyle(
+                                                        color:
+                                                            ThemeColor.white),
+                                                  )));
+                                          vs.getVideo(videoName);
+                                          _changeVideo(
+                                              "/storage/emulated/0/VDO/decrypted/Wrap.mp4");
+                                        } else {
+                                          videoURL = snapshot
+                                              .child('url')
+                                              .value
+                                              .toString();
+                                          _changeVideo(videoURL);
+                                        }
 
                                         setState(() {
                                           _top!.setVideoName(videoName);
@@ -276,14 +304,84 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                                             ),
                                             fileList.contains(
                                                     snapshot.key.toString())
-                                                ? const Icon(
-                                                    Icons.download_done_rounded,
-                                                    color: ThemeColor.black,
+                                                ? IconButton(
+                                                    onPressed: () {
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                          behavior:
+                                                              SnackBarBehavior
+                                                                  .floating,
+                                                          shape: RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          15.0))),
+                                                          backgroundColor:
+                                                              ThemeColor
+                                                                  .primary,
+                                                          content: Text(
+                                                            'Video stored in internal memory',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    ThemeColor
+                                                                        .white),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons
+                                                          .download_done_rounded,
+                                                      color: ThemeColor.black,
+                                                    ),
                                                   )
-                                                : const Icon(
-                                                    Icons.cloud,
-                                                    color: ThemeColor.black,
-                                                  )
+                                                : IconButton(
+                                                    onPressed: () {
+                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                          SnackBar(
+                                                              behavior:
+                                                                  SnackBarBehavior
+                                                                      .floating,
+                                                              shape: const RoundedRectangleBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              15.0))),
+                                                              backgroundColor:
+                                                                  ThemeColor
+                                                                      .primary,
+                                                              content: Text(
+                                                                'Downloading ${snapshot.key.toString()} video...',
+                                                                style: const TextStyle(
+                                                                    color: ThemeColor
+                                                                        .white),
+                                                              )));
+                                                      vs
+                                                          .download(
+                                                              snapshot
+                                                                  .child('url')
+                                                                  .value
+                                                                  .toString(),
+                                                              snapshot.key
+                                                                  .toString())
+                                                          .then((value) {
+                                                        setState(() {
+                                                          _listofFiles();
+                                                        });
+                                                      });
+
+                                                      dbservice.updateVDO(
+                                                          snapshot.key
+                                                              .toString(),
+                                                          "isDownloaded",
+                                                          "true");
+                                                    },
+                                                    icon: const Icon(
+                                                      Icons.download_rounded,
+                                                      color: ThemeColor.black,
+                                                    ))
                                           ],
                                         ),
                                       ),
@@ -293,12 +391,31 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
                               },
                             ),
                           ),
+                          const SizedBox(
+                            height: 60,
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
               ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddVideo(),
+              ));
+        },
+        label: const Text(
+          'Add Video',
+          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        ),
+        // icon: const Icon(Icons.add),
+        backgroundColor: ThemeColor.primary,
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/functions/db_service.dart';
+import 'package:flutter/services.dart';
 import 'package:vdo/functions/theme_color.dart';
 
 class AddVideo extends StatelessWidget {
@@ -10,6 +11,7 @@ class AddVideo extends StatelessWidget {
   DatabaseService dbService = DatabaseService();
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
         body: SafeArea(
             child: SingleChildScrollView(
@@ -47,6 +49,33 @@ class AddVideo extends StatelessWidget {
               height: 30,
             ),
             Container(
+              padding: const EdgeInsets.all(10.0),
+              width: double.infinity,
+              height: 60,
+              decoration: BoxDecoration(
+                boxShadow: const [
+                  BoxShadow(
+                      color: ThemeColor.shadow,
+                      blurRadius: 10,
+                      spreadRadius: 0.1,
+                      offset: Offset(0, 10)),
+                ],
+                color: ThemeColor.primary,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Center(
+                child: Text("Add direct download link for best working.",
+                    style: GoogleFonts.ubuntu(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: ThemeColor.white),
+                    textAlign: TextAlign.center),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
               width: double.infinity,
               height: 60,
               decoration: BoxDecoration(
@@ -77,33 +106,66 @@ class AddVideo extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              width: double.infinity,
-              height: 60,
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                      color: ThemeColor.shadow,
-                      blurRadius: 10,
-                      spreadRadius: 0.1,
-                      offset: Offset(0, 10)),
-                ],
-                color: ThemeColor.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20, top: 5),
-                  child: TextField(
-                    controller: _fileLinkTextController,
-                    onChanged: (value) {},
-                    showCursor: true,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      alignLabelWithHint: true,
-                      hintText: "Paste File Link",
-                      hintStyle: GoogleFonts.ubuntu(color: ThemeColor.black),
+            Row(
+              children: [
+                Container(
+                  width: width - 86,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    boxShadow: const [
+                      BoxShadow(
+                          color: ThemeColor.shadow,
+                          blurRadius: 10,
+                          spreadRadius: 0.1,
+                          offset: Offset(0, 10)),
+                    ],
+                    color: ThemeColor.white,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, right: 20, top: 5),
+                      child: TextField(
+                        controller: _fileLinkTextController,
+                        onChanged: (value) {},
+                        showCursor: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          alignLabelWithHint: true,
+                          hintText: "Paste File Link",
+                          hintStyle:
+                              GoogleFonts.ubuntu(color: ThemeColor.black),
+                        ),
+                      )),
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                GestureDetector(
+                  onTap: () async {
+                    ClipboardData? cdata =
+                        await Clipboard.getData(Clipboard.kTextPlain);
+                    String? copiedtext = cdata!.text;
+                    _fileLinkTextController.text = copiedtext!;
+                  },
+                  child: Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                      boxShadow: const [
+                        BoxShadow(
+                            color: ThemeColor.shadow,
+                            blurRadius: 10,
+                            spreadRadius: 0.1,
+                            offset: Offset(0, 10)),
+                      ],
+                      color: ThemeColor.white,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  )),
+                    child: const Icon(Icons.paste_rounded),
+                  ),
+                )
+              ],
             ),
             const SizedBox(
               height: 10,
@@ -135,7 +197,7 @@ class AddVideo extends StatelessWidget {
                 } else {
                   dbService.updateVDO(_fileNameTextController.text, "url",
                       _fileLinkTextController.text);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                       behavior: SnackBarBehavior.floating,
                       shape: RoundedRectangleBorder(
                           borderRadius:
