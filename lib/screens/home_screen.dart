@@ -47,8 +47,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String videoURL = '';
   int currentVideoIndex = 0;
   Map<int, Map<String, String>> itemMap = {};
-  void _listofFiles() async {
-    directory = (await getApplicationDocumentsDirectory()).path;
+  void _listofFiles() {
+    // directory = (await getApplicationDocumentsDirectory()).path;
     setState(() {
       file = Directory("/storage/emulated/0/VDO/encrypted").listSync();
       tempFile = Directory("$vidDir/VDO/decrypted").listSync();
@@ -77,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     _listofFiles();
 
-    dbReference.child("users").once().then((value) => null);
     VideoPlayerUtils.playerHandle(
         'https://manusebastian.com/assets/img/content/ajio/ajiofirst.mp4',
         autoPlay: false);
@@ -608,6 +607,8 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (fileList.contains(videoName)) {
       show.snackbar(context, 'Loading video: $videoName from storage...');
       vs.getVideo(videoName).then((value) {
+        tempFileList.add(videoName);
+
         _changeVideo("$vidDir/VDO/decrypted/$videoName.mp4");
       });
     } else {

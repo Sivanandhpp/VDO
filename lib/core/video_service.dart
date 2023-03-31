@@ -41,7 +41,7 @@ class VideoService {
   Future<bool?> download(String videoURL, String fileName) async {
     //To access visible directory
     Directory d = await getExternalVisibleDir;
-
+    Directory write = await getTempDir;
     //App directory : will not be visible but secured
     // Directory d = await getAppDir;
 
@@ -64,6 +64,7 @@ class VideoService {
       var resp = await http.get(Uri.parse(url));
 
       var encResult = _encryptData(resp.bodyBytes);
+      
       String p =
           await _writeData(encResult, '${d.path}/encrypted/$filename.aes');
       // String p = await _writeData(encResult, '/storage/emulated/0/VDO/demo.mp4.aes');
