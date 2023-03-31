@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeColor.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -70,6 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         phNumber = number.phoneNumber;
                       });
                     },
+                    keyboardAction: TextInputAction.done,
                     searchBoxDecoration: const InputDecoration(
                         prefixIcon: Icon(Icons.room_rounded),
                         label: Text("Search Country Code")),
@@ -100,7 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textFieldController: controller,
                     formatInput: false,
                     keyboardType: const TextInputType.numberWithOptions(
-                        signed: true, decimal: true),
+                        signed: false, decimal: false),
                     inputBorder: const OutlineInputBorder(),
                   ),
                 ),
@@ -114,7 +116,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontWeight: FontWeight.w500))
                     : Container(),
                 const SizedBox(
-                  height: 50,
+                  height: 5,
                 ),
                 GestureDetector(
                   onTap: () {
@@ -129,29 +131,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     }
                   },
-                  child: SizedBox(
+                  child: Container(
+                    height: 50,
                     width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Text(
-                          "Get Started",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: ThemeColor.primary,
-                            fontWeight: FontWeight.bold,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: ThemeColor.primary),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "Continue",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
                           ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                          height: 40,
-                          width: 40,
-                          decoration: BoxDecoration(
-                              color: ThemeColor.primary,
-                              borderRadius: BorderRadius.circular(15)),
-                          child: isLoading
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          isLoading
                               ? const Center(
                                   child: SizedBox(
                                       height: 20,
@@ -160,12 +161,52 @@ class _LoginScreenState extends State<LoginScreen> {
                                         color: ThemeColor.white,
                                       )),
                                 )
-                              : const Icon(Icons.arrow_forward_ios_rounded,
-                                  color: Colors.white),
-                        ),
-                      ],
+                              : const Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: Colors.white,
+                                  size: 18,
+                                ),
+                        ],
+                      ),
                     ),
                   ),
+                  // SizedBox(
+                  //   width: double.infinity,
+                  //   child: Row(
+                  //     mainAxisAlignment: MainAxisAlignment.end,
+                  //     children: [
+                  //       const Text(
+                  //         "Get Started",
+                  //         style: TextStyle(
+                  //           fontSize: 20,
+                  //           color: ThemeColor.primary,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       ),
+                  //       const SizedBox(
+                  //         width: 10,
+                  //       ),
+                  //       Container(
+                  //         height: 40,
+                  //         width: 40,
+                  //         decoration: BoxDecoration(
+                  //             color: ThemeColor.primary,
+                  //             borderRadius: BorderRadius.circular(15)),
+                  //         child: isLoading
+                  //             ? const Center(
+                  //                 child: SizedBox(
+                  //                     height: 20,
+                  //                     width: 20,
+                  //                     child: CircularProgressIndicator(
+                  //                       color: ThemeColor.white,
+                  //                     )),
+                  //               )
+                  //             : const Icon(Icons.arrow_forward_ios_rounded,
+                  //                 color: Colors.white),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                 ),
               ],
             ),

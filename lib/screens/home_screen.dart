@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   VideoPlayerTop? _top;
   VideoPlayerBottom? _bottom;
   LockIcon? _lockIcon;
-  String videoName = 'Video';
+  String videoName = 'AjioFirst';
   String videoURL = '';
 
   void _listofFiles() async {
@@ -55,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-  
     super.initState();
     _listofFiles();
 
@@ -84,7 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
-   
     VideoPlayerUtils.removeInitializedListener(this);
     VideoPlayerUtils.dispose();
     super.dispose();
@@ -182,6 +180,136 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            height: 50,
+                            decoration: BoxDecoration(
+                                boxShadow: const [
+                                  BoxShadow(
+                                      color: ThemeColor.shadow,
+                                      blurRadius: 10,
+                                      spreadRadius: 0.1,
+                                      offset: Offset(0, 10)),
+                                ],
+                                borderRadius: BorderRadius.circular(10),
+                                color: ThemeColor.primary,
+                                border: Border.all(
+                                    color: ThemeColor.primary, width: 0.1)),
+                            margin:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.arrow_back_ios_rounded,
+                                      color: ThemeColor.white,
+                                    )),
+                                fileList.contains(videoName)
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            const SnackBar(
+                                              behavior:
+                                                  SnackBarBehavior.floating,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(
+                                                              15.0))),
+                                              backgroundColor:
+                                                  ThemeColor.primary,
+                                              content: Text(
+                                                'Video already downloaded',
+                                                style: TextStyle(
+                                                    color: ThemeColor.white),
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                        child: Row(
+                                          children: const [
+                                            Text(
+                                              "Playing from storage",
+                                              style: TextStyle(
+                                                  color: ThemeColor.white,
+                                                  fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Icon(
+                                              Icons.download_done_rounded,
+                                              color: ThemeColor.white,
+                                              size: 20,
+                                            ),
+                                          ],
+                                        ),
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                                  behavior:
+                                                      SnackBarBehavior.floating,
+                                                  shape:
+                                                      const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius.circular(
+                                                                      15.0))),
+                                                  backgroundColor:
+                                                      ThemeColor.primary,
+                                                  content: Text(
+                                                    'Downloading video: $videoName...',
+                                                    style: const TextStyle(
+                                                        color:
+                                                            ThemeColor.white),
+                                                  )));
+                                          vs
+                                              .download(videoURL, videoName)
+                                              .then((value) {
+                                            setState(() {
+                                              _listofFiles();
+                                            });
+                                          });
+
+                                          dbservice.updateVDO(videoName,
+                                              "isDownloaded", "true");
+                                        },
+                                        child: Row(
+                                          children: const [
+                                            Text(
+                                              "Download video",
+                                              style: TextStyle(
+                                                  color: ThemeColor.white,
+                                                  fontSize: 15),
+                                            ),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
+                                            Icon(
+                                              Icons.download_rounded,
+                                              color: ThemeColor.white,
+                                              size: 20,
+                                            ),
+                                          ],
+                                        )),
+                                IconButton(
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      color: ThemeColor.white,
+                                    ))
+                              ],
+                            ),
+                          ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: FirebaseAnimatedList(
@@ -197,220 +325,231 @@ class _HomeScreenState extends State<HomeScreen> {
                                   (context, snapshot, animation, index) {
                                 return Column(
                                   children: [
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        videoName = snapshot.key.toString();
-                                        if (fileList.contains(videoName)) {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      15.0))),
-                                                  backgroundColor:
-                                                      ThemeColor.primary,
-                                                  content: Text(
-                                                    'Loading video: $videoName from storage...',
-                                                    style: const TextStyle(
-                                                        color:
-                                                            ThemeColor.white),
-                                                  )));
-                                          vs.getVideo(videoName);
-                                          _changeVideo(
-                                              "/storage/emulated/0/VDO/decrypted/$videoName.mp4");
-                                        } else {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      15.0))),
-                                                  backgroundColor:
-                                                      ThemeColor.primary,
-                                                  content: Text(
-                                                    'Loading video: $videoName from network...',
-                                                    style: const TextStyle(
-                                                        color:
-                                                            ThemeColor.white),
-                                                  )));
-                                          videoURL = snapshot
-                                              .child('url')
-                                              .value
-                                              .toString();
-                                          _changeVideo(videoURL);
-                                        }
+                                    snapshot.key.toString() == videoName
+                                        ? Container()
+                                        : GestureDetector(
+                                            onTap: () {
+                                              videoName =
+                                                  snapshot.key.toString();
+                                              if (fileList
+                                                  .contains(videoName)) {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        behavior:
+                                                            SnackBarBehavior
+                                                                .floating,
+                                                        shape: const RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        15.0))),
+                                                        backgroundColor:
+                                                            ThemeColor.primary,
+                                                        content: Text(
+                                                          'Loading video: $videoName from storage...',
+                                                          style: const TextStyle(
+                                                              color: ThemeColor
+                                                                  .white),
+                                                        )));
+                                                vs.getVideo(videoName);
+                                                _changeVideo(
+                                                    "/storage/emulated/0/VDO/decrypted/$videoName.mp4");
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                        behavior:
+                                                            SnackBarBehavior
+                                                                .floating,
+                                                        shape: const RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        15.0))),
+                                                        backgroundColor:
+                                                            ThemeColor.primary,
+                                                        content: Text(
+                                                          'Loading video: $videoName from network...',
+                                                          style: const TextStyle(
+                                                              color: ThemeColor
+                                                                  .white),
+                                                        )));
+                                                videoURL = snapshot
+                                                    .child('url')
+                                                    .value
+                                                    .toString();
+                                                _changeVideo(videoURL);
+                                              }
 
-                                        setState(() {
-                                          _top?.setVideoName(videoName);
-                                        });
-                                        //   _controller.pause();
-                                        //
-                                        //   if (snapshot.child("isDownloaded").value.toString() ==
-                                        //       "true") {
-                                        //     vs.getVideo(fileName);
-                                        //     offlineVideo(fileName, videoURL);
-                                        //   } else {
-                                        //     onlineVideo(videoURL);
-                                        //   }
+                                              setState(() {
+                                                _top?.setVideoName(videoName);
+                                              });
+                                              //   _controller.pause();
+                                              //
+                                              //   if (snapshot.child("isDownloaded").value.toString() ==
+                                              //       "true") {
+                                              //     vs.getVideo(fileName);
+                                              //     offlineVideo(fileName, videoURL);
+                                              //   } else {
+                                              //     onlineVideo(videoURL);
+                                              //   }
 
-                                        // setState(() {
-                                        //   videoURL = snapshot.value.toString();
-                                        // });
-                                      },
-                                      child: Container(
-                                        width: double.infinity,
-                                        height: 70,
-                                        decoration: BoxDecoration(
-                                            boxShadow: const [
-                                              BoxShadow(
-                                                  color: ThemeColor.shadow,
-                                                  blurRadius: 10,
-                                                  spreadRadius: 0.1,
-                                                  offset: Offset(0, 10)),
-                                            ],
-                                            color: ThemeColor.offWhite,
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: ThemeColor.primary,
-                                                width: 0.1)),
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                Text(
-                                                  snapshot.key.toString(),
-                                                  style: GoogleFonts.ubuntu(
-                                                    fontWeight: FontWeight.bold,
-                                                    fontSize: 15,
-                                                  ),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  snapshot
-                                                              .child('url')
-                                                              .value
-                                                              .toString()
-                                                              .length >
-                                                          55
-                                                      ? "${snapshot.child('url').value.toString().substring(0, 55)}..."
-                                                      : snapshot
-                                                          .child('url')
-                                                          .value
-                                                          .toString(),
-                                                  style: const TextStyle(
-                                                    fontSize: 10,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            fileList.contains(
-                                                    snapshot.key.toString())
-                                                ? IconButton(
-                                                    onPressed: () {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                          behavior:
-                                                              SnackBarBehavior
-                                                                  .floating,
-                                                          shape: RoundedRectangleBorder(
-                                                              borderRadius: BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          15.0))),
-                                                          backgroundColor:
-                                                              ThemeColor
-                                                                  .primary,
-                                                          content: Text(
-                                                            'Video already downloaded',
-                                                            style: TextStyle(
-                                                                color:
-                                                                    ThemeColor
-                                                                        .white),
-                                                          ),
+                                              // setState(() {
+                                              //   videoURL = snapshot.value.toString();
+                                              // });
+                                            },
+                                            child: Container(
+                                              width: double.infinity,
+                                              height: 70,
+                                              decoration: BoxDecoration(
+                                                  boxShadow: const [
+                                                    BoxShadow(
+                                                        color:
+                                                            ThemeColor.shadow,
+                                                        blurRadius: 10,
+                                                        spreadRadius: 0.1,
+                                                        offset: Offset(0, 10)),
+                                                  ],
+                                                  color: ThemeColor.offWhite,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                      color: ThemeColor.primary,
+                                                      width: 0.1)),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 20.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        snapshot.key.toString(),
+                                                        style:
+                                                            GoogleFonts.ubuntu(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 15,
                                                         ),
-                                                      );
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons
-                                                          .download_done_rounded,
-                                                      color: ThemeColor.black,
-                                                    ),
-                                                  )
-                                                : IconButton(
-                                                    onPressed: () {
-                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                          SnackBar(
-                                                              behavior:
-                                                                  SnackBarBehavior
-                                                                      .floating,
-                                                              shape: const RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              15.0))),
-                                                              backgroundColor:
-                                                                  ThemeColor
-                                                                      .primary,
-                                                              content: Text(
-                                                                'Downloading video: ${snapshot.key.toString()}...',
-                                                                style: const TextStyle(
-                                                                    color: ThemeColor
-                                                                        .white),
-                                                              )));
-                                                      vs
-                                                          .download(
-                                                              snapshot
-                                                                  .child('url')
-                                                                  .value
-                                                                  .toString(),
-                                                              snapshot.key
-                                                                  .toString())
-                                                          .then((value) {
-                                                        setState(() {
-                                                          _listofFiles();
-                                                        });
-                                                      });
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Text(
+                                                        snapshot
+                                                                    .child(
+                                                                        'url')
+                                                                    .value
+                                                                    .toString()
+                                                                    .length >
+                                                                55
+                                                            ? "${snapshot.child('url').value.toString().substring(0, 55)}..."
+                                                            : snapshot
+                                                                .child('url')
+                                                                .value
+                                                                .toString(),
+                                                        style: const TextStyle(
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  fileList.contains(snapshot.key
+                                                          .toString())
+                                                      ? IconButton(
+                                                          onPressed: () {
+                                                            ScaffoldMessenger
+                                                                    .of(context)
+                                                                .showSnackBar(
+                                                              const SnackBar(
+                                                                behavior:
+                                                                    SnackBarBehavior
+                                                                        .floating,
+                                                                shape: RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(15.0))),
+                                                                backgroundColor:
+                                                                    ThemeColor
+                                                                        .primary,
+                                                                content: Text(
+                                                                  'Video already downloaded',
+                                                                  style: TextStyle(
+                                                                      color: ThemeColor
+                                                                          .white),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .download_done_rounded,
+                                                            color: ThemeColor
+                                                                .black,
+                                                          ),
+                                                        )
+                                                      : IconButton(
+                                                          onPressed: () {
+                                                            ScaffoldMessenger.of(context).showSnackBar(
+                                                                SnackBar(
+                                                                    behavior:
+                                                                        SnackBarBehavior
+                                                                            .floating,
+                                                                    shape: const RoundedRectangleBorder(
+                                                                        borderRadius:
+                                                                            BorderRadius.all(Radius.circular(
+                                                                                15.0))),
+                                                                    backgroundColor:
+                                                                        ThemeColor
+                                                                            .primary,
+                                                                    content:
+                                                                        Text(
+                                                                      'Downloading video: ${snapshot.key.toString()}...',
+                                                                      style: const TextStyle(
+                                                                          color:
+                                                                              ThemeColor.white),
+                                                                    )));
+                                                            vs
+                                                                .download(
+                                                                    snapshot
+                                                                        .child(
+                                                                            'url')
+                                                                        .value
+                                                                        .toString(),
+                                                                    snapshot.key
+                                                                        .toString())
+                                                                .then((value) {
+                                                              setState(() {
+                                                                _listofFiles();
+                                                              });
+                                                            });
 
-                                                      dbservice.updateVDO(
-                                                          snapshot.key
-                                                              .toString(),
-                                                          "isDownloaded",
-                                                          "true");
-                                                    },
-                                                    icon: const Icon(
-                                                      Icons.download_rounded,
-                                                      color: ThemeColor.black,
-                                                    ))
-                                          ],
-                                        ),
-                                      ),
-                                    ),
+                                                            dbservice.updateVDO(
+                                                                snapshot.key
+                                                                    .toString(),
+                                                                "isDownloaded",
+                                                                "true");
+                                                          },
+                                                          icon: const Icon(
+                                                            Icons
+                                                                .download_rounded,
+                                                            color: ThemeColor
+                                                                .black,
+                                                          ))
+                                                ],
+                                              ),
+                                            ),
+                                          ),
                                   ],
                                 );
                               },

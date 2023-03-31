@@ -8,7 +8,7 @@ class VideoPlayerTop extends StatefulWidget {
   // String videoName;
   VideoPlayerTop({Key? key}) : super(key: key);
   late Function(bool) opacityCallback;
-  String title = 'Video';
+  String title = 'AjioFirst';
   bool setVideoName(String videoName) {
     title = videoName;
     return true;
@@ -24,7 +24,6 @@ class _VideoPlayerTopState extends State<VideoPlayerTop> {
       MediaQuery.of(context).orientation == Orientation.landscape;
   @override
   void initState() {
-    
     super.initState();
     widget.opacityCallback = (appear) {
       _opacity = appear ? 1.0 : 0.0;

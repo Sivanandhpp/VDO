@@ -9,7 +9,8 @@ import 'package:vdo/screens/login_screen.dart';
 class OtpScreen extends StatefulWidget {
   final String verificationId;
   final String phoneNO;
-  const OtpScreen({super.key, required this.verificationId, required this.phoneNO});
+  const OtpScreen(
+      {super.key, required this.verificationId, required this.phoneNO});
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -30,6 +31,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: ThemeColor.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -83,14 +85,25 @@ class _OtpScreenState extends State<OtpScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    auth.verifyOTP(context, widget.verificationId, otpCode!);
-                  
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Wrapper(),
-                        ));
-                    
+                    if (otpCode != null) {
+                      auth.verifyOTP(context, widget.verificationId, otpCode!);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Wrapper(),
+                          ));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.0))),
+                          backgroundColor: ThemeColor.primary,
+                          content: Text(
+                            'Please enter 6 digit OTP',
+                            style: TextStyle(color: ThemeColor.white),
+                          )));
+                    }
                   },
                   child: Container(
                     height: 50,

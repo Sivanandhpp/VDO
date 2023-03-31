@@ -18,7 +18,8 @@ class Wrapper extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: authService.user,
       builder: (_, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
+        if (snapshot.connectionState == ConnectionState.active &&
+            snapshot.hasData) {
           final User? user = snapshot.data;
           if (user != null) {
             userData.userid = user.uid;
@@ -49,7 +50,7 @@ class Wrapper extends StatelessWidget {
           }
           return const LoginScreen();
         }
-        return const Center(child: CircularProgressIndicator());
+        return const LoginScreen();
       },
     );
   }
