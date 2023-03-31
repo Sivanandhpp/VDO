@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/db_service.dart';
-import 'package:vdo/screens/snackbar_widget.dart';
+import 'package:vdo/widgets/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/screens/login_screen.dart';

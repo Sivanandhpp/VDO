@@ -3,7 +3,6 @@ import 'package:auto_orientation/auto_orientation.dart';
 import 'package:brightness_volume/brightness_volume.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vdo/player/utils/temp_value.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerUtils {
@@ -316,4 +315,7 @@ enum VideoPlayerState {
   playing, // Now Playing
   paused, // pause
   completed // end of playback
+}
+class TempValue{
+  static bool isLocked = false;
 }

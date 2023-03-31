@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/db_service.dart';
 import 'package:vdo/core/storage_service.dart';
-import 'package:vdo/screens/snackbar_widget.dart';
+import 'package:vdo/widgets/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/main.dart';
