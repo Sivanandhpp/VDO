@@ -217,16 +217,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                               itemMap[currentVideoIndex]!
                                                   .values
                                                   .toString();
+
                                           setState(() {
-                                            _top?.setVideoName(
-                                                tempVidName.substring(
-                                                    1, tempVidName.length - 1));
+                                            videoName = tempVidName.substring(
+                                                1, tempVidName.length - 1);
+                                            videoURL = tempVidLink.substring(
+                                                1, tempVidLink.length - 1);
+                                            _top?.setVideoName(videoName);
                                           });
                                           _offlineOrOnline(
-                                              tempVidName.substring(
-                                                  1, tempVidName.length - 1),
-                                              tempVidLink.substring(
-                                                  1, tempVidLink.length - 1));
+                                              videoName,
+                                              videoURL);
                                         },
                                         icon: const Icon(
                                           Icons.arrow_back_ios_rounded,
@@ -320,15 +321,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   .values
                                                   .toString();
                                           setState(() {
-                                            _top?.setVideoName(
-                                                tempVidName.substring(
-                                                    1, tempVidName.length - 1));
+                                            videoName = tempVidName.substring(
+                                                1, tempVidName.length - 1);
+                                            videoURL = tempVidLink.substring(
+                                                1, tempVidLink.length - 1);
+                                            _top?.setVideoName(videoName);
                                           });
                                           _offlineOrOnline(
-                                              tempVidName.substring(
-                                                  1, tempVidName.length - 1),
-                                              tempVidLink.substring(
-                                                  1, tempVidLink.length - 1));
+                                              videoName,
+                                              videoURL);
                                         },
                                         icon: const Icon(
                                           Icons.arrow_forward_ios_rounded,
