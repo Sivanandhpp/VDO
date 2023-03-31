@@ -3,7 +3,8 @@ import 'package:vdo/theme/theme_color.dart';
 
 class ShowSnackbar {
   snackbar(BuildContext context, String content) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
         behavior: SnackBarBehavior.floating,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(15.0))),
@@ -11,7 +12,8 @@ class ShowSnackbar {
         content: Text(
           content,
           style: const TextStyle(color: ThemeColor.white),
-        )));
-        
+        ),
+      ),
+    );
   }
 }
