@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/db_service.dart';
+import 'package:vdo/screens/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/screens/login_screen.dart';
@@ -18,6 +19,7 @@ class OtpScreen extends StatefulWidget {
 
 class _OtpScreenState extends State<OtpScreen> {
   AuthService auth = AuthService();
+  ShowSnackbar show = ShowSnackbar();
 
   DatabaseService dbService = DatabaseService();
 
@@ -93,16 +95,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             builder: (context) => Wrapper(),
                           ));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          backgroundColor: ThemeColor.primary,
-                          content: Text(
-                            'Please enter 6 digit OTP',
-                            style: TextStyle(color: ThemeColor.white),
-                          )));
+                      show.snackbar(context, 'Please enter 6 digit OTP');
                     }
                   },
                   child: Container(

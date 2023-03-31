@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/db_service.dart';
 import 'package:vdo/core/storage_service.dart';
+import 'package:vdo/screens/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/main.dart';
@@ -26,6 +27,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
   String selectedFilePath = '';
   Storage storage = Storage();
   DatabaseService dbService = DatabaseService();
+  ShowSnackbar show = ShowSnackbar();
   Widget getAvatar() {
     if (isLoading) {
       return const CircleAvatar(
@@ -133,16 +135,8 @@ class _ScreenProfileState extends State<ScreenProfile> {
                     );
                     if (results == null) {
                       // ignore: use_build_context_synchronously
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          backgroundColor: ThemeColor.primary,
-                          content: Text(
-                            'No Image Selected',
-                            style: TextStyle(color: ThemeColor.white),
-                          )));
+                      show.snackbar(context, 'No Image Selected');
+                    
                     } else {
                       setState(() {
                         isLoading = true;

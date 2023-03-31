@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/core/db_service.dart';
 import 'package:flutter/services.dart';
+import 'package:vdo/screens/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 
 class AddVideo extends StatelessWidget {
@@ -9,6 +10,7 @@ class AddVideo extends StatelessWidget {
   final TextEditingController _fileNameTextController = TextEditingController();
   final TextEditingController _fileLinkTextController = TextEditingController();
   DatabaseService dbService = DatabaseService();
+  ShowSnackbar show = ShowSnackbar();
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -177,42 +179,16 @@ class AddVideo extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     if (_fileNameTextController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          backgroundColor: ThemeColor.primary,
-                          content: Text(
-                            'Please enter file name',
-                            style: TextStyle(color: ThemeColor.white),
-                          )));
+                      show.snackbar(context, 'Please enter file name');
                     } else if (_fileLinkTextController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          backgroundColor: ThemeColor.primary,
-                          content: Text(
-                            'Please paste file link',
-                            style: TextStyle(color: ThemeColor.white),
-                          )));
+                      show.snackbar(context, 'Please paste file link');
                     } else {
                       dbService.updateVDO(
                           _fileNameTextController.text.replaceAll(' ', ''),
                           "url",
                           _fileLinkTextController.text);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(15.0))),
-                          backgroundColor: ThemeColor.primary,
-                          content: Text(
-                            'Video added successfully!',
-                            style: TextStyle(color: ThemeColor.white),
-                          )));
+                      show.snackbar(context, 'Video added successfully!');
+
                       Navigator.pop(context);
                     }
                   },

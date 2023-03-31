@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/db_service.dart';
 import 'package:vdo/core/storage_service.dart';
+import 'package:vdo/screens/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/wrapper.dart';
 import 'package:vdo/main.dart';
@@ -19,6 +20,7 @@ class SignupScreen extends StatefulWidget {
 
 class _SignupScreenState extends State<SignupScreen> {
   AuthService auth = AuthService();
+  ShowSnackbar show = ShowSnackbar();
   final _formKey = GlobalKey<FormState>();
   bool isLoading = false;
   bool updatedProfile = false;
@@ -35,7 +37,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
   @override
   void initState() {
-   
     _phoneNoController = TextEditingController(text: widget.phoneNO);
     super.initState();
   }
@@ -102,16 +103,8 @@ class _SignupScreenState extends State<SignupScreen> {
                   );
                   if (results == null) {
                     // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        behavior: SnackBarBehavior.floating,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15.0))),
-                        backgroundColor: ThemeColor.primary,
-                        content: Text(
-                          'No Image Selected',
-                          style: TextStyle(color: ThemeColor.white),
-                        )));
+                    show.snackbar(context, 'No Image Selected');
+                   
                   } else {
                     setState(() {
                       isLoading = true;
@@ -204,7 +197,6 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (_nameController.text.isEmpty) {
                           return "This field can't be empty";
                         }
-                   
                       },
                       style: GoogleFonts.poppins(
                         color: ThemeColor.black,

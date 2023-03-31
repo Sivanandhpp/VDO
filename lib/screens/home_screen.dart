@@ -6,6 +6,7 @@ import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:vdo/core/db_service.dart';
+import 'package:vdo/screens/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/video_service.dart';
 import 'package:vdo/main.dart';
@@ -26,6 +27,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseService dbservice = DatabaseService();
+  ShowSnackbar show = ShowSnackbar();
   VideoService vs = VideoService();
   late String directory;
   List file = [];
@@ -41,7 +43,8 @@ class _HomeScreenState extends State<HomeScreen> {
   LockIcon? _lockIcon;
   String videoName = 'AjioFirst';
   String videoURL = '';
-
+  int currentVideoIndex = 0;
+  Map<int, Map<String, String>> itemMap = {};
   void _listofFiles() async {
     directory = (await getApplicationDocumentsDirectory()).path;
     setState(() {
@@ -58,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _listofFiles();
 
+    dbReference.child("users").once().then((value) => null);
     VideoPlayerUtils.playerHandle(
         'https://manusebastian.com/assets/img/content/ajio/ajiofirst.mp4',
         autoPlay: false);
@@ -204,39 +208,57 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.arrow_back_ios_rounded,
-                                      color: ThemeColor.white,
-                                    )),
+                                currentVideoIndex == 0
+                                    ? Container(
+                                        width: 40,
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          // TODO:
+                                          setState(() {
+                                            currentVideoIndex -= 1;
+                                          });
+                                          String tempVidName =
+                                              itemMap[currentVideoIndex]!
+                                                  .keys
+                                                  .toString();
+
+                                          String tempVidLink =
+                                              itemMap[currentVideoIndex]!
+                                                  .values
+                                                  .toString();
+
+                                          _offlineOrOnline(
+                                              tempVidName.substring(
+                                                  1, tempVidName.length - 1),
+                                              tempVidLink.substring(
+                                                  1, tempVidLink.length - 1));
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_back_ios_rounded,
+                                          color: ThemeColor.white,
+                                        )),
                                 fileList.contains(videoName)
                                     ? GestureDetector(
                                         onTap: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(
-                                            const SnackBar(
-                                              behavior:
-                                                  SnackBarBehavior.floating,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              15.0))),
-                                              backgroundColor:
-                                                  ThemeColor.primary,
-                                              content: Text(
-                                                'Video already downloaded',
-                                                style: TextStyle(
-                                                    color: ThemeColor.white),
-                                              ),
-                                            ),
-                                          );
+                                          show.snackbar(context,
+                                              'Video already downloaded');
+
+                                          vs
+                                              .download(videoURL, videoName)
+                                              .then((value) {
+                                            setState(() {
+                                              _listofFiles();
+                                            });
+                                          });
+
+                                          dbservice.updateVDO(videoName,
+                                              "isDownloaded", "true");
                                         },
                                         child: Row(
                                           children: const [
                                             Text(
-                                              "Playing from storage",
+                                              "Offline",
                                               style: TextStyle(
                                                   color: ThemeColor.white,
                                                   fontSize: 15),
@@ -254,24 +276,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : GestureDetector(
                                         onTap: () {
-                                          ScaffoldMessenger.of(context)
-                                              .showSnackBar(SnackBar(
-                                                  behavior:
-                                                      SnackBarBehavior.floating,
-                                                  shape:
-                                                      const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius.circular(
-                                                                      15.0))),
-                                                  backgroundColor:
-                                                      ThemeColor.primary,
-                                                  content: Text(
-                                                    'Downloading video: $videoName...',
-                                                    style: const TextStyle(
-                                                        color:
-                                                            ThemeColor.white),
-                                                  )));
+                                          show.snackbar(context,
+                                              'Downloading video: $videoName...');
+
                                           vs
                                               .download(videoURL, videoName)
                                               .then((value) {
@@ -286,7 +293,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         child: Row(
                                           children: const [
                                             Text(
-                                              "Download video",
+                                              "Download",
                                               style: TextStyle(
                                                   color: ThemeColor.white,
                                                   fontSize: 15),
@@ -301,12 +308,36 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ),
                                           ],
                                         )),
-                                IconButton(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      color: ThemeColor.white,
-                                    ))
+                                currentVideoIndex == itemMap.length - 1
+                                    ? Container(
+                                        width: 40,
+                                      )
+                                    : IconButton(
+                                        onPressed: () {
+                                          // TODO:
+                                          setState(() {
+                                            currentVideoIndex += 1;
+                                          });
+                                          String tempVidName =
+                                              itemMap[currentVideoIndex]!
+                                                  .keys
+                                                  .toString();
+
+                                          String tempVidLink =
+                                              itemMap[currentVideoIndex]!
+                                                  .values
+                                                  .toString();
+
+                                          _offlineOrOnline(
+                                              tempVidName.substring(
+                                                  1, tempVidName.length - 1),
+                                              tempVidLink.substring(
+                                                  1, tempVidLink.length - 1));
+                                        },
+                                        icon: const Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: ThemeColor.white,
+                                        ))
                               ],
                             ),
                           ),
@@ -318,84 +349,33 @@ class _HomeScreenState extends State<HomeScreen> {
                               shrinkWrap: true,
                               defaultChild: const Center(
                                 child: LinearProgressIndicator(
-                                  color: Colors.blue,
+                                  color: ThemeColor.primary,
                                 ),
                               ),
                               itemBuilder:
                                   (context, snapshot, animation, index) {
+                                itemMap[index] = {
+                                  snapshot.key.toString():
+                                      snapshot.child("url").value.toString()
+                                };
                                 return Column(
                                   children: [
                                     snapshot.key.toString() == videoName
                                         ? Container()
                                         : GestureDetector(
                                             onTap: () {
+                                              currentVideoIndex = index;
                                               videoName =
                                                   snapshot.key.toString();
-                                              if (fileList
-                                                  .contains(videoName)) {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        behavior:
-                                                            SnackBarBehavior
-                                                                .floating,
-                                                        shape: const RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.all(
-                                                                    Radius.circular(
-                                                                        15.0))),
-                                                        backgroundColor:
-                                                            ThemeColor.primary,
-                                                        content: Text(
-                                                          'Loading video: $videoName from storage...',
-                                                          style: const TextStyle(
-                                                              color: ThemeColor
-                                                                  .white),
-                                                        )));
-                                                vs.getVideo(videoName);
-                                                _changeVideo(
-                                                    "/storage/emulated/0/VDO/decrypted/$videoName.mp4");
-                                              } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                        behavior:
-                                                            SnackBarBehavior
-                                                                .floating,
-                                                        shape: const RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius.all(
-                                                                    Radius.circular(
-                                                                        15.0))),
-                                                        backgroundColor:
-                                                            ThemeColor.primary,
-                                                        content: Text(
-                                                          'Loading video: $videoName from network...',
-                                                          style: const TextStyle(
-                                                              color: ThemeColor
-                                                                  .white),
-                                                        )));
-                                                videoURL = snapshot
-                                                    .child('url')
-                                                    .value
-                                                    .toString();
-                                                _changeVideo(videoURL);
-                                              }
-
+                                              videoURL = snapshot
+                                                  .child('url')
+                                                  .value
+                                                  .toString();
+                                              _offlineOrOnline(
+                                                  videoName, videoURL);
                                               setState(() {
                                                 _top?.setVideoName(videoName);
                                               });
-                                              //   _controller.pause();
-                                              //
-                                              //   if (snapshot.child("isDownloaded").value.toString() ==
-                                              //       "true") {
-                                              //     vs.getVideo(fileName);
-                                              //     offlineVideo(fileName, videoURL);
-                                              //   } else {
-                                              //     onlineVideo(videoURL);
-                                              //   }
-
-                                              // setState(() {
-                                              //   videoURL = snapshot.value.toString();
-                                              // });
                                             },
                                             child: Container(
                                               width: double.infinity,
@@ -468,28 +448,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           .toString())
                                                       ? IconButton(
                                                           onPressed: () {
-                                                            ScaffoldMessenger
-                                                                    .of(context)
-                                                                .showSnackBar(
-                                                              const SnackBar(
-                                                                behavior:
-                                                                    SnackBarBehavior
-                                                                        .floating,
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius:
-                                                                        BorderRadius.all(
-                                                                            Radius.circular(15.0))),
-                                                                backgroundColor:
-                                                                    ThemeColor
-                                                                        .primary,
-                                                                content: Text(
-                                                                  'Video already downloaded',
-                                                                  style: TextStyle(
-                                                                      color: ThemeColor
-                                                                          .white),
-                                                                ),
-                                                              ),
-                                                            );
+                                                            show.snackbar(
+                                                                context,
+                                                                'Video already downloaded');
                                                           },
                                                           icon: const Icon(
                                                             Icons
@@ -500,25 +461,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                                         )
                                                       : IconButton(
                                                           onPressed: () {
-                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                                SnackBar(
-                                                                    behavior:
-                                                                        SnackBarBehavior
-                                                                            .floating,
-                                                                    shape: const RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.all(Radius.circular(
-                                                                                15.0))),
-                                                                    backgroundColor:
-                                                                        ThemeColor
-                                                                            .primary,
-                                                                    content:
-                                                                        Text(
-                                                                      'Downloading video: ${snapshot.key.toString()}...',
-                                                                      style: const TextStyle(
-                                                                          color:
-                                                                              ThemeColor.white),
-                                                                    )));
+                                                            show.snackbar(
+                                                                context,
+                                                                'Downloading video: ${snapshot.key.toString()}...');
+                                                            
                                                             vs
                                                                 .download(
                                                                     snapshot
@@ -545,7 +491,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                                 .download_rounded,
                                                             color: ThemeColor
                                                                 .black,
-                                                          ))
+                                                          ),
+                                                        )
                                                 ],
                                               ),
                                             ),
@@ -623,16 +570,16 @@ class _HomeScreenState extends State<HomeScreen> {
     _playerUI = null;
     setState(() {});
     VideoPlayerUtils.playerHandle(url);
-    // _index += 1;
-    // if (_index == _urls.length) {
-    //   _index = 0;
-    // }
   }
 
-  // final List<String> _urls = [
-  //   "https://www.apple.com/105/media/cn/mac/family/2018/46c4b917_abfd_45a3_9b51_4e3054191797/films/bruce/mac-bruce-tpl-cn-2018_1280x720h.mp4",
-  //   "https://drive.google.com/uc?export=download&id=1kbsRgns2EB4Rkca-L2nMm4C5NjlFqQ2a",
-  //   "https://drive.google.com/uc?export=download&id=1MawnFe_JP9f81otDGkmXs3HaVwqYQs_R",
-  // ];
-  // int _index = 1;
+  void _offlineOrOnline(String videoName, String videoURL) {
+    if (fileList.contains(videoName)) {
+      show.snackbar(context, 'Loading video: $videoName from storage...');
+      vs.getVideo(videoName);
+      _changeVideo("/storage/emulated/0/VDO/decrypted/$videoName.mp4");
+    } else {
+      show.snackbar(context, 'Loading video: $videoName from network...');
+      _changeVideo(videoURL);
+    }
+  }
 }
