@@ -189,13 +189,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             height: 50,
                             decoration: BoxDecoration(
-                                // boxShadow: const [
-                                //   BoxShadow(
-                                //       color: ThemeColor.shadow,
-                                //       blurRadius: 10,
-                                //       spreadRadius: 0.1,
-                                //       offset: Offset(0, 10)),
-                                // ],
                                 borderRadius: BorderRadius.circular(10),
                                 color: ThemeColor.primary,
                                 border: Border.all(
@@ -213,9 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : IconButton(
                                         onPressed: () {
-                                          setState(() {
-                                            currentVideoIndex -= 1;
-                                          });
+                                          currentVideoIndex -= 1;
+
                                           String tempVidName =
                                               itemMap[currentVideoIndex]!
                                                   .keys
@@ -225,7 +217,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               itemMap[currentVideoIndex]!
                                                   .values
                                                   .toString();
-
+                                          setState(() {
+                                            _top?.setVideoName(
+                                                tempVidName.substring(
+                                                    1, tempVidName.length - 1));
+                                          });
                                           _offlineOrOnline(
                                               tempVidName.substring(
                                                   1, tempVidName.length - 1),
@@ -312,9 +308,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : IconButton(
                                         onPressed: () {
-                                          setState(() {
-                                            currentVideoIndex += 1;
-                                          });
+                                          currentVideoIndex += 1;
+
                                           String tempVidName =
                                               itemMap[currentVideoIndex]!
                                                   .keys
@@ -324,7 +319,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                               itemMap[currentVideoIndex]!
                                                   .values
                                                   .toString();
-
+                                          setState(() {
+                                            _top?.setVideoName(
+                                                tempVidName.substring(
+                                                    1, tempVidName.length - 1));
+                                          });
                                           _offlineOrOnline(
                                               tempVidName.substring(
                                                   1, tempVidName.length - 1),
@@ -378,14 +377,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                               width: double.infinity,
                                               height: 70,
                                               decoration: BoxDecoration(
-                                                  // boxShadow: const [
-                                                  //   BoxShadow(
-                                                  //       color:
-                                                  //           ThemeColor.shadow,
-                                                  //       blurRadius: 10,
-                                                  //       spreadRadius: 0.1,
-                                                  //       offset: Offset(0, 10)),
-                                                  // ],
                                                   color: ThemeColor.offWhite,
                                                   borderRadius:
                                                       BorderRadius.circular(10),

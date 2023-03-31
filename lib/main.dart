@@ -27,9 +27,9 @@ Future<bool?> requestStoragePermission() async {
     Permission.accessMediaLocation.request();
     if (result.isGranted) {
       return true;
-    } else {
+    } 
       return false;
-    }
+    
   }
 }
 
