@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 import 'package:vdo/core/auth_service.dart';
-import 'package:vdo/core/db_service.dart';
 import 'package:vdo/widgets/snackbar_widget.dart';
 import 'package:vdo/theme/theme_color.dart';
 import 'package:vdo/core/wrapper.dart';
@@ -20,15 +19,9 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   AuthService auth = AuthService();
   ShowSnackbar show = ShowSnackbar();
-
-  DatabaseService dbService = DatabaseService();
-
   String? otpCode;
   TextEditingController pinController = TextEditingController();
-  @override
-  void initState() {
-    super.initState();
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -141,8 +134,5 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+
 }
