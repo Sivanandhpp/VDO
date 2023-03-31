@@ -1,6 +1,6 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:vdo/core/video_player_utils.dart';
+import 'package:vdo/theme/theme_color.dart';
 
 // ignore: must_be_immutable
 class VideoPlayerTop extends StatefulWidget {
@@ -19,6 +19,8 @@ class VideoPlayerTop extends StatefulWidget {
 
 class _VideoPlayerTopState extends State<VideoPlayerTop> {
   double _opacity = TempValue.isLocked ? 0.0 : 1.0;
+  bool isMuted = false;
+
   bool get _isFullScreen =>
       MediaQuery.of(context).orientation == Orientation.landscape;
   @override
@@ -72,14 +74,18 @@ class _VideoPlayerTopState extends State<VideoPlayerTop> {
               const Spacer(),
               IconButton(
                 onPressed: () {
-                  if (kDebugMode) {
-                    print("Clicked");
+                  if (isMuted) {
+                    VideoPlayerUtils.setVolume(0.5);
+                    isMuted = false;
+                  } else {
+                    VideoPlayerUtils.setVolume(0.0);
+                    isMuted = true;
                   }
+                  setState(() {});
                 },
-                icon: const Icon(
-                  Icons.more_horiz_outlined,
-                  color: Colors.white,
-                  size: 32,
+                icon: Icon(
+                  isMuted ? Icons.volume_off : Icons.volume_up,
+                  color: ThemeColor.white,
                 ),
               )
             ],
