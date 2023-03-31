@@ -21,7 +21,7 @@ class ThemeColor {
 
   static const Color waGreen = Color(0xFF25D366);
   static const Color instaPurpleRed = Color(0xFFE1306C);
-  static const Color ytRed = Color(0xFFFF0000);
+  static const Color ytRed = Color.fromARGB(255, 221, 0, 0);
   static const Color purpleBG = Color(0xFF10054D);
   static const Color shimmerBG = Color(0xFFD3D3D3);
 }

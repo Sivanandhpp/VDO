@@ -19,10 +19,9 @@ class VideoPlayerUtils {
   static double get aspectRatio =>
       _instance._aspectRatio; // Video playback ratio
 
-  static void pauseAndWait() async{
-     await _instance._controller!.pause();
+  static void pauseAndWait() async {
+    await _instance._controller!.pause();
     _instance._updatePlayerState(VideoPlayerState.paused);
-    
   }
 
   // Play, pause, switch video and other playback operations
@@ -193,9 +192,10 @@ class VideoPlayerUtils {
     _instance._position = const Duration(seconds: 0);
     _instance._aspectRatio = 1.0;
     _instance._stopPosition = false;
-    if (_instance._controller != null) {
-      _instance._controller = null;
-    }
+    // TODO: Make controller if player not working properly
+    // if (_instance._controller != null) {
+    //   _instance._controller = null;
+    // }
   }
 
   ///  ---------------------  private ------------------------

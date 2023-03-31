@@ -8,7 +8,7 @@ import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/screens/login_screen.dart';
 import 'package:vdo/core/user_model.dart';
 import 'package:vdo/screens/signup_screen.dart';
-import 'package:vdo/theme/theme_color.dart';
+import 'package:vdo/widgets/home_shimmer.dart';
 
 // ignore: must_be_immutable, use_key_in_widget_constructors
 class Wrapper extends StatelessWidget {
@@ -38,14 +38,13 @@ class Wrapper extends StatelessWidget {
                               ConnectionState.done) {
                             return const HomeScreen();
                           }
-                          return const Center(
-                              child: CircularProgressIndicator(color: ThemeColor.primary,));
+                          return const HomeShimmer();
                         });
                   } else {
                     return SignupScreen(phoneNO: user.phoneNo.toString());
                   }
                 }
-                return const Center(child: CircularProgressIndicator());
+                return const HomeShimmer();
               },
             );
           }

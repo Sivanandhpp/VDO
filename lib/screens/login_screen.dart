@@ -21,7 +21,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeColor.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -33,7 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 40,
                 ),
-                Image.asset('assets/login.jpg'),
+                Padding(
+                  padding: const EdgeInsets.all(25.0),
+                  child: Image.asset('assets/login.png'),
+                ),
                 const Text(
                   "Welcome to VDO",
                   style: TextStyle(
@@ -170,43 +172,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  // SizedBox(
-                  //   width: double.infinity,
-                  //   child: Row(
-                  //     mainAxisAlignment: MainAxisAlignment.end,
-                  //     children: [
-                  //       const Text(
-                  //         "Get Started",
-                  //         style: TextStyle(
-                  //           fontSize: 20,
-                  //           color: ThemeColor.primary,
-                  //           fontWeight: FontWeight.bold,
-                  //         ),
-                  //       ),
-                  //       const SizedBox(
-                  //         width: 10,
-                  //       ),
-                  //       Container(
-                  //         height: 40,
-                  //         width: 40,
-                  //         decoration: BoxDecoration(
-                  //             color: ThemeColor.primary,
-                  //             borderRadius: BorderRadius.circular(15)),
-                  //         child: isLoading
-                  //             ? const Center(
-                  //                 child: SizedBox(
-                  //                     height: 20,
-                  //                     width: 20,
-                  //                     child: CircularProgressIndicator(
-                  //                       color: ThemeColor.white,
-                  //                     )),
-                  //               )
-                  //             : const Icon(Icons.arrow_forward_ios_rounded,
-                  //                 color: Colors.white),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
                 ),
               ],
             ),

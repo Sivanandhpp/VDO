@@ -71,7 +71,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   Text(
                     "New here? Welcome!",
                     style: GoogleFonts.poppins(
-                      color: ThemeColor.black,
+                      // color: ThemeColor.black,
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
                     ),
@@ -104,7 +104,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   if (results == null) {
                     // ignore: use_build_context_synchronously
                     show.snackbar(context, 'No Image Selected');
-                   
                   } else {
                     setState(() {
                       isLoading = true;
@@ -133,7 +132,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     isLoading
                         ? const CircleAvatar(
                             radius: 70,
-                            backgroundColor: Colors.white,
+                            // backgroundColor: Colors.white,
                             child: ClipOval(
                                 child: CircularProgressIndicator(
                               color: ThemeColor.primary,
@@ -141,7 +140,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           )
                         : CircleAvatar(
                             radius: 75,
-                            backgroundColor: ThemeColor.white,
+                            // backgroundColor: ThemeColor.white,
                             child: ClipOval(
                               child: CachedNetworkImage(
                                 imageUrl: userData.profile,
@@ -159,7 +158,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 errorWidget: (context, url, error) =>
                                     const CircleAvatar(
                                   radius: 70,
-                                  backgroundColor: Colors.white,
+                                  // backgroundColor: Colors.white,
                                   child: ClipOval(
                                     child: Image(
                                       image: AssetImage('assets/avatar.jpg'),
@@ -179,7 +178,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       child: const Icon(
                         Icons.camera_alt_rounded,
                         size: 20,
-                        color: ThemeColor.white,
+                        // color: ThemeColor.white,
                       ),
                     )
                   ],
@@ -198,18 +197,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           return "This field can't be empty";
                         }
                       },
-                      style: GoogleFonts.poppins(
-                        color: ThemeColor.black,
-                      ),
                       keyboardType: TextInputType.name,
                       textInputAction: TextInputAction.next,
                       cursorColor: ThemeColor.primary,
                       decoration: InputDecoration(
-                        fillColor: ThemeColor.textFieldBgColor,
+                        // fillColor: ThemeColor.textFieldBgColor,
                         filled: true,
                         hintText: "Full name",
                         hintStyle: GoogleFonts.poppins(
-                          color: ThemeColor.textFieldHintColor,
+                          // color: ThemeColor.textFieldHintColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -230,19 +226,16 @@ class _SignupScreenState extends State<SignupScreen> {
                           return "Phone number must have 10 digits";
                         }
                       },
-                      style: GoogleFonts.poppins(
-                        color: ThemeColor.black,
-                      ),
                       readOnly: true,
                       cursorColor: ThemeColor.primary,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        fillColor: ThemeColor.textFieldBgColor,
+                        // fillColor: ThemeColor.textFieldBgColor,
                         filled: true,
                         hintText: "Phone No",
                         hintStyle: GoogleFonts.poppins(
-                          color: ThemeColor.textFieldHintColor,
+                          // color: ThemeColor.textFieldHintColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -268,18 +261,15 @@ class _SignupScreenState extends State<SignupScreen> {
                           return "Enter a valid G-Mail ID";
                         }
                       },
-                      style: GoogleFonts.poppins(
-                        color: ThemeColor.black,
-                      ),
                       cursorColor: ThemeColor.primary,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
                       decoration: InputDecoration(
-                        fillColor: ThemeColor.textFieldBgColor,
+                        // fillColor: ThemeColor.textFieldBgColor,
                         filled: true,
                         hintText: "E-Mail",
                         hintStyle: GoogleFonts.poppins(
-                          color: ThemeColor.textFieldHintColor,
+                          // color: ThemeColor.textFieldHintColor,
                           fontSize: 14,
                           fontWeight: FontWeight.w400,
                         ),
@@ -301,12 +291,12 @@ class _SignupScreenState extends State<SignupScreen> {
                             horizontal: 10.0, vertical: 15),
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(Radius.circular(18.0)),
-                          color: ThemeColor.textFieldBgColor,
+                          // color: ThemeColor.textFieldBgColor,
                         ),
                         child: Text(
                           "Date of birth: ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}",
                           style: GoogleFonts.poppins(
-                            color: ThemeColor.black,
+                            // color: ThemeColor.black,
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
                           ),

@@ -4,7 +4,6 @@ import 'package:vdo/core/err_handler.dart';
 import 'package:vdo/core/user_model.dart';
 import 'package:vdo/screens/otp_screen.dart';
 
-
 class AuthService {
   final auth.FirebaseAuth _firebaseAuth = auth.FirebaseAuth.instance;
   // DatabaseService dbService = DatabaseService();
@@ -40,12 +39,12 @@ class AuthService {
                 phoneNO: phoneNo,
               ),
             ));
-        String smsCode = 'xxxx';
+        // String smsCode = 'xxxx';
 
-        auth.PhoneAuthCredential credential = auth.PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode);
+        // auth.PhoneAuthCredential credential = auth.PhoneAuthProvider.credential(
+        //     verificationId: verificationId, smsCode: smsCode);
 
-        await _firebaseAuth.signInWithCredential(credential);
+        // await _firebaseAuth.signInWithCredential(credential);
       },
       timeout: const Duration(seconds: 60),
       codeAutoRetrievalTimeout: (String verificationId) {},
@@ -59,7 +58,14 @@ class AuthService {
   ) async {
     auth.PhoneAuthCredential cred = auth.PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
-    auth.User user = (await _firebaseAuth.signInWithCredential(cred)).user!;
+    try {
+      auth.User user = (await _firebaseAuth.signInWithCredential(cred)).user!;
+    } on auth.FirebaseAuthException catch (e) {
+      errHandler.fromErrorCode(e, context);
+    } catch (e) {
+      errHandler.fromErrorCode(e, context);
+    }
+
     // await _firebaseAuth.signInWithCredential(auth.PhoneAuthProvider.credential(
     //     verificationId: verificationId, smsCode: otp));
   }

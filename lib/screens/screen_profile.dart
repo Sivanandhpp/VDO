@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/db_service.dart';
 import 'package:vdo/core/storage_service.dart';
@@ -25,50 +26,10 @@ class _ScreenProfileState extends State<ScreenProfile> {
   String profileUrl = 'null';
   String selectedFileName = '';
   String selectedFilePath = '';
+
   Storage storage = Storage();
   DatabaseService dbService = DatabaseService();
   ShowSnackbar show = ShowSnackbar();
-  Widget getAvatar() {
-    if (isLoading) {
-      return const CircleAvatar(
-        radius: 70,
-        backgroundColor: Colors.white,
-        child: ClipOval(
-            child: CircularProgressIndicator(
-          color: ThemeColor.primary,
-        )),
-      );
-    }
-
-    return CircleAvatar(
-      radius: 75,
-      backgroundColor: ThemeColor.white,
-      child: ClipOval(
-        child: CachedNetworkImage(
-          imageUrl: userData.profile,
-          imageBuilder: (context, imageProvider) => Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: imageProvider,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          placeholder: (context, url) => const CircularProgressIndicator(),
-          errorWidget: (context, url, error) => const CircleAvatar(
-            radius: 70,
-            backgroundColor: Colors.white,
-            child: ClipOval(
-              child: Image(
-                image: AssetImage('assets/images/avatar.jpg'),
-                fit: BoxFit.fill,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,13 +68,13 @@ class _ScreenProfileState extends State<ScreenProfile> {
                                 child: const Icon(
                                   Icons.arrow_back_ios_new,
                                   size: 20,
-                                  color: Colors.black,
+                                  // color: Colors.black,
                                 ),
                               ),
                               Text(
                                 "Profile",
                                 style: GoogleFonts.ubuntu(
-                                  color: ThemeColor.black,
+                                  // color: ThemeColor.black,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -125,7 +86,6 @@ class _ScreenProfileState extends State<ScreenProfile> {
                     ),
                   ],
                 ),
-
                 GestureDetector(
                   onTap: () async {
                     final results = await FilePicker.platform.pickFiles(
@@ -136,7 +96,6 @@ class _ScreenProfileState extends State<ScreenProfile> {
                     if (results == null) {
                       // ignore: use_build_context_synchronously
                       show.snackbar(context, 'No Image Selected');
-                    
                     } else {
                       setState(() {
                         isLoading = true;
@@ -165,46 +124,58 @@ class _ScreenProfileState extends State<ScreenProfile> {
                   child: Stack(
                     alignment: Alignment.bottomRight,
                     children: [
-                      isLoading
+                      userData.profile.isEmpty
                           ? const CircleAvatar(
                               radius: 70,
-                              backgroundColor: Colors.white,
+                              // backgroundColor: Colors.white,
                               child: ClipOval(
-                                  child: CircularProgressIndicator(
-                                color: ThemeColor.primary,
-                              )),
+                                child: Image(
+                                  image: AssetImage('assets/avatar.jpg'),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
                             )
-                          : CircleAvatar(
-                              radius: 75,
-                              backgroundColor: ThemeColor.white,
-                              child: ClipOval(
-                                child: CachedNetworkImage(
-                                  imageUrl: userData.profile,
-                                  imageBuilder: (context, imageProvider) =>
-                                      Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: imageProvider,
-                                        fit: BoxFit.cover,
+                          : isLoading
+                              ? const CircleAvatar(
+                                  radius: 70,
+                                  // backgroundColor: Colors.white,
+                                  child: ClipOval(
+                                      child: CircularProgressIndicator(
+                                    color: ThemeColor.primary,
+                                  )),
+                                )
+                              : CircleAvatar(
+                                  radius: 70,
+                                  // backgroundColor: ThemeColor.white,
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl: userData.profile,
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  placeholder: (context, url) =>
-                                      const CircularProgressIndicator(),
-                                  errorWidget: (context, url, error) =>
-                                      const CircleAvatar(
-                                    radius: 70,
-                                    backgroundColor: Colors.white,
-                                    child: ClipOval(
-                                      child: Image(
-                                        image: AssetImage('assets/avatar.jpg'),
-                                        fit: BoxFit.fill,
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const CircleAvatar(
+                                        radius: 70,
+                                        // backgroundColor: Colors.white,
+                                        child: ClipOval(
+                                          child: Image(
+                                            image:
+                                                AssetImage('assets/avatar.jpg'),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
                       Container(
                         height: 40,
                         width: 40,
@@ -226,7 +197,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 Text(
                   userData.name,
                   style: GoogleFonts.ubuntu(
-                    color: ThemeColor.black,
+                    // color: ThemeColor.black,
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
                   ),
@@ -237,7 +208,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 Text(
                   "Date of birth: ${userData.dob}",
                   style: GoogleFonts.ubuntu(
-                    color: ThemeColor.black,
+                    // color: ThemeColor.black,
                     fontSize: 20,
                     fontWeight: FontWeight.normal,
                   ),
@@ -248,7 +219,7 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 Text(
                   "Mail ID: ${userData.email}",
                   style: GoogleFonts.ubuntu(
-                    color: ThemeColor.black,
+                    // color: ThemeColor.black,
                     fontSize: 20,
                     fontWeight: FontWeight.normal,
                   ),
@@ -259,20 +230,11 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 Text(
                   "Phone No: ${userData.phoneNo}",
                   style: GoogleFonts.ubuntu(
-                    color: ThemeColor.black,
+                    // color: ThemeColor.black,
                     fontSize: 20,
                     fontWeight: FontWeight.normal,
                   ),
                 ),
-
-                // Text(
-                //   "Batch: ${userData.batch} | Revision: ${userData.revision}",
-                //   style: GoogleFonts.ubuntu(
-                //     color: ThemeColor.black,
-                //     fontSize: 20,
-                //     fontWeight: FontWeight.normal,
-                //   ),
-                // ),
                 const SizedBox(
                   height: 50,
                 ),
@@ -303,42 +265,55 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      // if (isLight) {
-                      //   MyApp.of(context).changeTheme(ThemeMode.dark);
-                      //   setState(() {
-                      //     isLight = false;
-                      //   });
-                      // } else {
-                      //   MyApp.of(context).changeTheme(ThemeMode.light);
-                      //   setState(() {
-                      //     isLight = true;
-                      //   });
-                      // }
-
-                      // MyApp.of(context).changeTheme(ThemeMode.system);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: ThemeColor.lightGrey,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: const Center(
-                        child: Text(
-                          "Switch Theme",
-                          style:
-                              TextStyle(fontSize: 15, color: ThemeColor.black),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                 const SizedBox(
                   height: 80,
+                ),
+                const Text(
+                  "Switch Theme",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ToggleSwitch(
+                  minWidth: 90.0,
+                  minHeight: 70.0,
+                  initialLabelIndex: themeMode,
+                  cornerRadius: 20.0,
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey,
+                  inactiveFgColor: Colors.white,
+                  totalSwitches: 3,
+                  icons: const [
+                    Icons.dark_mode_rounded,
+                    Icons.phone_android_rounded,
+                    Icons.light_mode_rounded,
+                  ],
+                  iconSize: 30.0,
+                  activeBgColors: const [
+                    [Colors.black, Colors.black26],
+                    [ThemeColor.primary, ThemeColor.secondary],
+                    [Colors.yellow, Colors.orange]
+                  ],
+                  animate:
+                      true, // with just animate set to true, default curve = Curves.easeIn
+                  curve: Curves
+                      .easeInOutBack, // animate must be set to true when using custom curve
+                  onToggle: (index) {
+                    if (index == 0) {
+                      MyApp.of(context).changeTheme(ThemeMode.dark);
+                      themeMode = 0;
+                      spInstance.setInt("theme", 0);
+                    } else if (index == 1) {
+                      MyApp.of(context).changeTheme(ThemeMode.system);
+                      themeMode = 1;
+                      spInstance.setInt("theme", 1);
+                    } else if (index == 2) {
+                      MyApp.of(context).changeTheme(ThemeMode.light);
+                      themeMode = 2;
+                      spInstance.setInt("theme", 2);
+                    }
+                  },
                 ),
               ],
             ),

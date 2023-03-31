@@ -1,15 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vdo/firebase_options.dart';
 import 'package:vdo/core/auth_service.dart';
 import 'package:vdo/core/user_data.dart';
 import 'package:vdo/core/wrapper.dart';
-import 'package:vdo/theme/theme_color.dart';
+import 'package:vdo/theme/app_theme.dart';
 
+late SharedPreferences spInstance;
 late DatabaseReference dbReference;
+int? themeMode = 1;
+
 UserData userData = UserData();
 main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,20 +22,45 @@ main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   dbReference = FirebaseDatabase.instance.ref();
+  spInstance = await SharedPreferences.getInstance();
   await Permission.storage.request();
+
   runApp(const MyApp());
 }
 
-// requestStoragePermission() async {
-//   if (!await Permission.storage.isGranted) {
-//     await Permission.storage.request();
-//     Permission.accessMediaLocation.request();
-//     Permission.sms.request();
-//   }
-// }
-
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+  static _MyAppState of(BuildContext context) =>
+      context.findAncestorStateOfType<_MyAppState>()!;
+}
+
+class _MyAppState extends State<MyApp> {
+  late ThemeMode _themeMode;
+  getTheme() {
+    if (spInstance.containsKey('theme')) {
+      themeMode = spInstance.getInt('theme');
+      if (themeMode == 0) {
+        _themeMode = ThemeMode.dark;
+      } else if (themeMode == 1) {
+        _themeMode = ThemeMode.system;
+      } else if (themeMode == 2) {
+        _themeMode = ThemeMode.light;
+      }
+    } else {
+      spInstance.setInt('theme', 1);
+    }
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getTheme();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -42,11 +72,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'VDO',
-          theme: ThemeData(
-              primaryColor: ThemeColor.primary,
-              scaffoldBackgroundColor: ThemeColor.scaffoldBgColor),
-          // darkTheme: AppTheme.darkTheme,
-          themeMode: ThemeMode.light,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: _themeMode,
 
           // ThemeData(
           //   scaffoldBackgroundColor: Colors.white,
@@ -54,5 +82,11 @@ class MyApp extends StatelessWidget {
           // ),
           home: Wrapper()),
     );
+  }
+
+  void changeTheme(ThemeMode themeMode) {
+    setState(() {
+      _themeMode = themeMode;
+    });
   }
 }

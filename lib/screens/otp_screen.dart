@@ -33,7 +33,6 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeColor.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -41,9 +40,15 @@ class _OtpScreenState extends State<OtpScreen> {
             child: Column(
               children: [
                 const SizedBox(
+                  height: 60,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Image.asset('assets/otp.png'),
+                ),
+                const SizedBox(
                   height: 40,
                 ),
-                Image.asset('assets/otp.jpg'),
                 const Text(
                   "Welcome to VDO",
                   style: TextStyle(
@@ -99,7 +104,7 @@ class _OtpScreenState extends State<OtpScreen> {
                     }
                   },
                   child: Container(
-                    height: 50,
+                    height: 60,
                     width: double.infinity,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
@@ -113,20 +118,21 @@ class _OtpScreenState extends State<OtpScreen> {
                   ),
                 ),
                 TextButton(
-                    onPressed: () {
-                      Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ));
-                    },
-                    child: const Text(
-                      "Change number?",
-                      style: TextStyle(
-                          color: ThemeColor.primary,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 15),
-                    ))
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ));
+                  },
+                  child: const Text(
+                    "Change number?",
+                    style: TextStyle(
+                        // color: ThemeColor.primary,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 15),
+                  ),
+                ),
               ],
             ),
           ),

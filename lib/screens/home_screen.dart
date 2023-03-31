@@ -86,8 +86,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void dispose() {
+    VideoPlayerUtils.pauseAndWait();
     VideoPlayerUtils.removeInitializedListener(this);
     VideoPlayerUtils.dispose();
+
     super.dispose();
   }
 
@@ -95,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: _isFullScreen
             ? safeAreaPlayerUI()
@@ -119,53 +122,68 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: const Icon(
                               Icons.menu,
                               size: 30,
-                              color: Colors.black,
+                              // color: Colors.black,
                             ),
                           ),
                         ),
                         Text(
                           "Video Player",
                           style: GoogleFonts.ubuntu(
-                            color: ThemeColor.black,
+                            // color: ThemeColor.black,
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         InkWell(
-                          child: CircleAvatar(
-                            radius: 20,
-                            backgroundColor: ThemeColor.white,
-                            child: ClipOval(
-                              child: CachedNetworkImage(
-                                imageUrl: userData.profile,
-                                imageBuilder: (context, imageProvider) =>
-                                    Container(
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      image: imageProvider,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                placeholder: (context, url) =>
-                                    const CircularProgressIndicator(),
-                                errorWidget: (context, url, error) =>
-                                    const CircleAvatar(
-                                  radius: 30,
+                          child: userData.profile == "null"
+                              ? const CircleAvatar(
+                                  radius: 20,
                                   backgroundColor: ThemeColor.white,
                                   child: ClipOval(
                                     child: Image(
                                       height: 50,
                                       width: 50,
                                       image: AssetImage("assets/avatar.jpg"),
-                                      fit: BoxFit.fill,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                )
+                              : CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: ThemeColor.white,
+                                  child: ClipOval(
+                                    child: CachedNetworkImage(
+                                      imageUrl: userData.profile,
+                                      imageBuilder: (context, imageProvider) =>
+                                          Container(
+                                        decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                            image: imageProvider,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const CircleAvatar(
+                                        radius: 30,
+                                        backgroundColor: ThemeColor.white,
+                                        child: ClipOval(
+                                          child: Image(
+                                            height: 50,
+                                            width: 50,
+                                            image: AssetImage(
+                                                "assets/avattar.jpg"),
+                                            fit: BoxFit.fill,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ),
-                          ),
                           onTap: () {
+                            VideoPlayerUtils.pauseAndWait();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -374,11 +392,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                               width: double.infinity,
                                               height: 70,
                                               decoration: BoxDecoration(
-                                                  color: ThemeColor.offWhite,
+                                                  // color:TheneData,
                                                   borderRadius:
                                                       BorderRadius.circular(10),
                                                   border: Border.all(
-                                                      color: ThemeColor.primary,
+                                                      color:
+                                                          ThemeColor.secondary,
                                                       width: 0.1)),
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -440,8 +459,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           icon: const Icon(
                                                             Icons
                                                                 .download_done_rounded,
-                                                            color: ThemeColor
-                                                                .black,
+                                                            // color: ThemeColor
+                                                            //     .black,
                                                           ),
                                                         )
                                                       : IconButton(
@@ -474,8 +493,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                           icon: const Icon(
                                                             Icons
                                                                 .download_rounded,
-                                                            color: ThemeColor
-                                                                .black,
+                                                            // color: ThemeColor
+                                                            //     .black,
                                                           ),
                                                         )
                                                 ],
@@ -498,21 +517,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddVideo(),
-              ));
-        },
-        label: const Text(
-          'Add Video',
-          style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-        ),
-        // icon: const Icon(Icons.add),
-        backgroundColor: ThemeColor.primary,
-      ),
+      floatingActionButton: _isFullScreen
+          ? Container()
+          : FloatingActionButton.extended(
+              onPressed: () {
+                VideoPlayerUtils.pauseAndWait();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => AddVideo(),
+                    ));
+              },
+              label: const Text(
+                'Add Video',
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: ThemeColor.white),
+              ),
+              // icon: const Icon(Icons.add),
+              backgroundColor: ThemeColor.primary,
+            ),
     );
   }
 

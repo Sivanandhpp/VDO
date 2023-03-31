@@ -35,13 +35,13 @@ class AddVideo extends StatelessWidget {
                         child: const Icon(
                           Icons.arrow_back_ios_new,
                           size: 20,
-                          color: Colors.black,
+                          // color: Colors.black,
                         ),
                       ),
                       Text(
                         "Add Video",
                         style: GoogleFonts.ubuntu(
-                          color: ThemeColor.black,
+                          // color: ThemeColor.black,
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
                         ),
@@ -91,10 +91,10 @@ class AddVideo extends StatelessWidget {
                       //       offset: Offset(0, 10)),
                       // ],
 
-                      color: ThemeColor.white,
+                      // color: ThemeColor.white,
                       borderRadius: BorderRadius.circular(20),
                       border:
-                          Border.all(color: ThemeColor.primary, width: 0.2)),
+                          Border.all(color: ThemeColor.secondary, width: 0.2)),
                   child: Padding(
                       padding:
                           const EdgeInsets.only(left: 20, right: 20, top: 5),
@@ -102,12 +102,12 @@ class AddVideo extends StatelessWidget {
                         controller: _fileNameTextController,
                         onChanged: (value) {},
                         showCursor: true,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           border: InputBorder.none,
                           alignLabelWithHint: true,
                           hintText: "Enter File Name",
-                          hintStyle:
-                              GoogleFonts.ubuntu(color: ThemeColor.black),
+                          // hintStyle:
+                          //     GoogleFonts.ubuntu(color: ThemeColor.black),
                         ),
                       )),
                 ),
@@ -121,7 +121,7 @@ class AddVideo extends StatelessWidget {
                       height: 60,
                       decoration: BoxDecoration(
                         border:
-                            Border.all(color: ThemeColor.primary, width: 0.2),
+                            Border.all(color: ThemeColor.secondary, width: 0.2),
                         // boxShadow: const [
                         //   BoxShadow(
                         //       color: ThemeColor.shadow,
@@ -129,7 +129,7 @@ class AddVideo extends StatelessWidget {
                         //       spreadRadius: 0.1,
                         //       offset: Offset(0, 10)),
                         // ],
-                        color: ThemeColor.white,
+                        // color: ThemeColor.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Padding(
@@ -139,12 +139,12 @@ class AddVideo extends StatelessWidget {
                             controller: _fileLinkTextController,
                             onChanged: (value) {},
                             showCursor: true,
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                               border: InputBorder.none,
                               alignLabelWithHint: true,
                               hintText: "Paste File Link",
-                              hintStyle:
-                                  GoogleFonts.ubuntu(color: ThemeColor.black),
+                              // hintStyle:
+                              //     GoogleFonts.ubuntu(color: ThemeColor.black),
                             ),
                           )),
                     ),
@@ -162,8 +162,8 @@ class AddVideo extends StatelessWidget {
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(
-                          border:
-                              Border.all(color: ThemeColor.primary, width: 0.2),
+                          border: Border.all(
+                              color: ThemeColor.secondary, width: 0.2),
                           // boxShadow: const [
                           //   BoxShadow(
                           //       color: ThemeColor.shadow,
@@ -171,7 +171,7 @@ class AddVideo extends StatelessWidget {
                           //       spreadRadius: 0.1,
                           //       offset: Offset(0, 10)),
                           // ],
-                          color: ThemeColor.white,
+                          // color: ThemeColor.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Icon(Icons.paste_rounded),
@@ -207,7 +207,10 @@ class AddVideo extends StatelessWidget {
                     child: const Center(
                       child: Text(
                         "Done",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

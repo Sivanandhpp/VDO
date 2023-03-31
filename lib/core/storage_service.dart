@@ -16,13 +16,13 @@ class Storage {
   Future<String> uploadProfileImg(
       String filePath, String fileName, BuildContext context) async {
     File file = File(filePath);
-    String fileNamePursed = fileName.replaceAll(RegExp('\\s+'), 'x');
+    String fileNameParsed = fileName.replaceAll(RegExp('\\s+'), 'x');
     String url =
-        "https://firebasestorage.googleapis.com/v0/b/v-d-o-player.appspot.com/o/profile%2F$fileNamePursed?alt=media";
+        "https://firebasestorage.googleapis.com/v0/b/v-d-o-player.appspot.com/o/profile%2F$fileNameParsed?alt=media";
     userData.profile = url;
     try {
       await storage
-          .ref('profile/$fileNamePursed')
+          .ref('profile/$fileNameParsed')
           .putFile(file)
           .then((value) {});
     } on firebase_core.FirebaseException catch (e) {
