@@ -241,88 +241,6 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 const SizedBox(
                   height: 50,
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      await authService.signOut();
-                      // ignore: use_build_context_synchronously
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: ThemeColor.ytRed,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text(
-                              "Sign Out",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: ThemeColor.white),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.logout,
-                              color: ThemeColor.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                  child: GestureDetector(
-                    onTap: () {
-                      Directory("$getTempDir/VDO/decrypted")
-                          .delete(recursive: true)
-                          .then((value) => show.snackbar(
-                              context, "Cache cleared successfully!"));
-                    },
-                    child: Container(
-                      width: double.infinity,
-                      height: 60,
-                      decoration: BoxDecoration(
-                          color: ThemeColor.grey,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: const [
-                            Text(
-                              "Clear cache",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.bold,
-                                  color: ThemeColor.white),
-                            ),
-                            Icon(
-                              Icons.delete,
-                              color: ThemeColor.white,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 const Text(
                   "Switch Theme",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -369,6 +287,88 @@ class _ScreenProfileState extends State<ScreenProfile> {
                       spInstance.setInt("theme", 2);
                     }
                   },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Directory("$getTempDir/VDO/decrypted")
+                          .delete(recursive: true)
+                          .then((value) => show.snackbar(
+                              context, "Cache cleared successfully!"));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          color: ThemeColor.grey,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Text(
+                              "Clear cache",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ThemeColor.white),
+                            ),
+                            Icon(
+                              Icons.delete,
+                              color: ThemeColor.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await authService.signOut();
+                      // ignore: use_build_context_synchronously
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          color: ThemeColor.ytRed,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Text(
+                              "Sign Out",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ThemeColor.white),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.logout,
+                              color: ThemeColor.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
               ],
             ),
