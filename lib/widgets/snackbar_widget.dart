@@ -12,5 +12,6 @@ class ShowSnackbar {
           content,
           style: const TextStyle(color: ThemeColor.white),
         )));
+        
   }
 }

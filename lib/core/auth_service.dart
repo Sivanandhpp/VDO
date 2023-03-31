@@ -60,70 +60,11 @@ class AuthService {
     auth.PhoneAuthCredential cred = auth.PhoneAuthProvider.credential(
         verificationId: verificationId, smsCode: otp);
     auth.User user = (await _firebaseAuth.signInWithCredential(cred)).user!;
-
-    // if (user != null) {
-    // onSuccess(user.uid);
-    // if (dbService.getUserInRtdb(user.uid)) {
-    //   print("yooo");
-    // }
-
-    // _userFromFirebase(user);
-    // }
     // await _firebaseAuth.signInWithCredential(auth.PhoneAuthProvider.credential(
     //     verificationId: verificationId, smsCode: otp));
   }
 
   Future<void> signOut() async {
-    // spService.clearSharedprefUser();
     return await _firebaseAuth.signOut();
   }
 }
-
-
-
-
-  // Future<User?> signInWithEmailAndPassword(
-  //   String email,
-  //   String password,
-  //   BuildContext context,
-  // ) async {
-  //   try {
-  //     final credential = await _firebaseAuth.signInWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //     return _userFromFirebase(credential.user);
-  //   } on auth.FirebaseAuthException catch (e) {
-  //     errHandler.fromErrorCode(e, context);
-  //   } catch (e) {
-  //     errHandler.fromErrorCode(e, context);
-  //   }
-  //   return null;
-  // }
-
-  // Future<User?> createUserWithEmailAndPassword(
-  //     String name,
-  //     String phoneNo,
-  //     String email,
-  //     String password,
-  //     String batch,
-  //     String revision,
-  //     BuildContext context) async {
-  //   // globals.userName = name;
-  //   try {
-  //     final credential = await _firebaseAuth.createUserWithEmailAndPassword(
-  //       email: email,
-  //       password: password,
-  //     );
-  //     credential.user!.linkWithPhoneNumber(phoneNo);
-  //     credential.user!.updateDisplayName(name);
-  //     // userData.setUserData(credential.user!.uid, name, email, phoneNo, password,
-  //     //     batch, revision, 'user','null','active', true);
-  //     return _userFromFirebase(credential.user);
-  //   } on auth.FirebaseAuthException catch (e) {
-  //     errHandler.fromErrorCode(e, context);
-  //   } catch (e) {
-  //     errHandler.fromErrorCode(e, context);
-  //   }
-  //   return null;
-  // }

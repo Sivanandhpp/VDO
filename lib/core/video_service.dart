@@ -38,16 +38,14 @@ class VideoService {
     return _downloadAndCreate(videoURL, d, fileName);
   }
 
- getVideo(String fileName) async {
+  Future<String> getVideo(String fileName) async {
     //To access visible directory
     Directory d = await getExternalVisibleDir;
 
     //App directory : will not be visible but secured
     // Directory d = await getAppDir;
-  
-   
-   _getNormalFile(d, fileName);
-  
+
+    return _getNormalFile(d, fileName);
   }
 
   Future<bool> _downloadAndCreate(String url, Directory d, filename) async {
@@ -67,13 +65,14 @@ class VideoService {
     }
   }
 
-   _getNormalFile(Directory d, filename) async {
+  Future<String> _getNormalFile(Directory d, filename) async {
     Uint8List encData = await _readData('${d.path}/encrypted/$filename.aes');
     // Uint8List encData = await _readData('/storage/emulated/0/VDO/demo.mp4.aes');
     var plainData = await _decryptData(encData);
     String p = await _writeData(plainData, '${d.path}/decrypted/$filename.mp4');
     // p = await _writeData(plainData, '/storage/emulated/0/VDO/demo.mp4');
     print("file decrypted successfully: $p");
+    return p;
   }
 
   _encryptData(plainString) {

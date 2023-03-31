@@ -17,21 +17,17 @@ main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   dbReference = FirebaseDatabase.instance.ref();
-  requestStoragePermission();
+  await Permission.storage.request();
   runApp(const MyApp());
 }
 
-Future<bool?> requestStoragePermission() async {
-  if (!await Permission.storage.isGranted) {
-    PermissionStatus result = await Permission.storage.request();
-    Permission.accessMediaLocation.request();
-    if (result.isGranted) {
-      return true;
-    } 
-      return false;
-    
-  }
-}
+// requestStoragePermission() async {
+//   if (!await Permission.storage.isGranted) {
+//     await Permission.storage.request();
+//     Permission.accessMediaLocation.request();
+//     Permission.sms.request();
+//   }
+// }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

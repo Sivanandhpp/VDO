@@ -225,9 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 1, tempVidLink.length - 1);
                                             _top?.setVideoName(videoName);
                                           });
-                                          _offlineOrOnline(
-                                              videoName,
-                                              videoURL);
+                                          _offlineOrOnline(videoName, videoURL);
                                         },
                                         icon: const Icon(
                                           Icons.arrow_back_ios_rounded,
@@ -327,9 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 1, tempVidLink.length - 1);
                                             _top?.setVideoName(videoName);
                                           });
-                                          _offlineOrOnline(
-                                              videoName,
-                                              videoURL);
+                                          _offlineOrOnline(videoName, videoURL);
                                         },
                                         icon: const Icon(
                                           Icons.arrow_forward_ios_rounded,
@@ -562,10 +558,12 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _offlineOrOnline(String videoName, String videoURL) {
+    VideoPlayerUtils.pauseAndWait();
     if (fileList.contains(videoName)) {
       show.snackbar(context, 'Loading video: $videoName from storage...');
-      vs.getVideo(videoName);
-      _changeVideo("/storage/emulated/0/VDO/decrypted/$videoName.mp4");
+      vs.getVideo(videoName).then((value) {
+        _changeVideo("/storage/emulated/0/VDO/decrypted/$videoName.mp4");
+      });
     } else {
       show.snackbar(context, 'Loading video: $videoName from network...');
       _changeVideo(videoURL);

@@ -19,6 +19,12 @@ class VideoPlayerUtils {
   static double get aspectRatio =>
       _instance._aspectRatio; // Video playback ratio
 
+  static void pauseAndWait() async{
+     await _instance._controller!.pause();
+    _instance._updatePlayerState(VideoPlayerState.paused);
+    
+  }
+
   // Play, pause, switch video and other playback operations
   static void playerHandle(String url,
       {bool autoPlay = true, bool looping = false}) async {
@@ -316,6 +322,7 @@ enum VideoPlayerState {
   paused, // pause
   completed // end of playback
 }
-class TempValue{
+
+class TempValue {
   static bool isLocked = false;
 }
