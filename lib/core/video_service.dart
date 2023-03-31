@@ -13,6 +13,16 @@ class VideoService {
     return appDocDir;
   }
 
+  Future<Directory> get getTempDir async {
+    final tempDir = await getTemporaryDirectory();
+    if (await Directory('${tempDir.path}/VDO/decrypted').exists()) {
+      return tempDir;
+    } else {
+      Directory('${tempDir.path}/VDO/decrypted').create(recursive: true);
+      return tempDir;
+    }
+  }
+
   Future<Directory> get getExternalVisibleDir async {
     if (await Directory('/storage/emulated/0/VDO').exists()) {
       final externalDir = Directory('/storage/emulated/0/VDO');
@@ -41,11 +51,11 @@ class VideoService {
   Future<String> getVideo(String fileName) async {
     //To access visible directory
     Directory d = await getExternalVisibleDir;
-
+    Directory write = await getTempDir;
     //App directory : will not be visible but secured
     // Directory d = await getAppDir;
 
-    return _getNormalFile(d, fileName);
+    return _getNormalFile(d, write, fileName);
   }
 
   Future<bool> _downloadAndCreate(String url, Directory d, filename) async {
@@ -65,11 +75,12 @@ class VideoService {
     }
   }
 
-  Future<String> _getNormalFile(Directory d, filename) async {
+  Future<String> _getNormalFile(Directory d, Directory write, filename) async {
     Uint8List encData = await _readData('${d.path}/encrypted/$filename.aes');
     // Uint8List encData = await _readData('/storage/emulated/0/VDO/demo.mp4.aes');
     var plainData = await _decryptData(encData);
-    String p = await _writeData(plainData, '${d.path}/decrypted/$filename.mp4');
+    String p = await _writeData(
+        plainData, '${write.path}/VDO/decrypted/$filename.mp4');
     // p = await _writeData(plainData, '/storage/emulated/0/VDO/demo.mp4');
     print("file decrypted successfully: $p");
     return p;

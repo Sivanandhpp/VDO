@@ -1,5 +1,5 @@
+import 'dart:io';
 import 'dart:ui';
-import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
@@ -30,7 +30,9 @@ class _HomeScreenState extends State<HomeScreen> {
   VideoService vs = VideoService();
   late String directory;
   List file = [];
+  List tempFile = [];
   List<String> fileList = [];
+  List tempFileList = [];
   bool get _isFullScreen =>
       MediaQuery.of(context).orientation == Orientation.landscape;
   Size get _window => MediaQueryData.fromWindow(window).size;
@@ -38,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   double get _height => _isFullScreen ? _window.height : _window.width * 9 / 16;
   Widget? _playerUI;
   VideoPlayerTop? _top;
+  String vidDir = "/data/user/0/com.example.vdo/cache";
   VideoPlayerBottom? _bottom;
   LockIcon? _lockIcon;
   String videoName = 'AjioFirst';
@@ -47,17 +50,31 @@ class _HomeScreenState extends State<HomeScreen> {
   void _listofFiles() async {
     directory = (await getApplicationDocumentsDirectory()).path;
     setState(() {
-      file = io.Directory("/storage/emulated/0/VDO/encrypted").listSync();
+      file = Directory("/storage/emulated/0/VDO/encrypted").listSync();
+      tempFile = Directory("$vidDir/VDO/decrypted").listSync();
       for (int i = 0; i < file.length; i++) {
         String s = file[i].toString();
         fileList.add(s.substring(0, s.indexOf('.')).split('/').last);
       }
+      for (int i = 0; i < tempFile.length; i++) {
+        String s = tempFile[i].toString();
+        tempFileList.add(s.split('/').last.replaceAll('.mp4\'', ''));
+      }
     });
+  }
+
+  Future<String> get getTempDir async {
+    final tempDir = await getTemporaryDirectory();
+    return tempDir.path;
   }
 
   @override
   void initState() {
     super.initState();
+    getTempDir.then((value) {
+      vidDir = value;
+    });
+
     _listofFiles();
 
     dbReference.child("users").once().then((value) => null);
@@ -584,10 +601,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _offlineOrOnline(String videoName, String videoURL) {
     VideoPlayerUtils.pauseAndWait();
-    if (fileList.contains(videoName)) {
+
+    if (tempFileList.contains(videoName)) {
+      show.snackbar(context, 'Loading video: $videoName from storage...');
+      _changeVideo("$vidDir/VDO/decrypted/$videoName.mp4");
+    } else if (fileList.contains(videoName)) {
       show.snackbar(context, 'Loading video: $videoName from storage...');
       vs.getVideo(videoName).then((value) {
-        _changeVideo("/storage/emulated/0/VDO/decrypted/$videoName.mp4");
+        _changeVideo("$vidDir/VDO/decrypted/$videoName.mp4");
       });
     } else {
       show.snackbar(context, 'Loading video: $videoName from network...');

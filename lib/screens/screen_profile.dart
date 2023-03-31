@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:vdo/core/auth_service.dart';
@@ -252,11 +255,26 @@ class _ScreenProfileState extends State<ScreenProfile> {
                       decoration: BoxDecoration(
                           color: ThemeColor.ytRed,
                           borderRadius: BorderRadius.circular(20)),
-                      child: const Center(
-                        child: Text(
-                          "Sign Out",
-                          style:
-                              TextStyle(fontSize: 15, color: ThemeColor.white),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Text(
+                              "Sign Out",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ThemeColor.white),
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Icon(
+                              Icons.logout,
+                              color: ThemeColor.white,
+                            )
+                          ],
                         ),
                       ),
                     ),
@@ -265,15 +283,52 @@ class _ScreenProfileState extends State<ScreenProfile> {
                 const SizedBox(
                   height: 10,
                 ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Directory("$getTempDir/VDO/decrypted")
+                          .delete(recursive: true)
+                          .then((value) => show.snackbar(
+                              context, "Cache cleared successfully!"));
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      height: 60,
+                      decoration: BoxDecoration(
+                          color: ThemeColor.grey,
+                          borderRadius: BorderRadius.circular(20)),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: const [
+                            Text(
+                              "Clear cache",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: ThemeColor.white),
+                            ),
+                            Icon(
+                              Icons.delete,
+                              color: ThemeColor.white,
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(
-                  height: 80,
+                  height: 10,
                 ),
                 const Text(
                   "Switch Theme",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 ToggleSwitch(
                   minWidth: 90.0,
@@ -321,5 +376,10 @@ class _ScreenProfileState extends State<ScreenProfile> {
         ),
       ),
     );
+  }
+
+  Future<String> get getTempDir async {
+    final tempDir = await getTemporaryDirectory();
+    return tempDir.path;
   }
 }
