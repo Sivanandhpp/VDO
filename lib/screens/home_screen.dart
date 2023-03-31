@@ -189,13 +189,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           Container(
                             height: 50,
                             decoration: BoxDecoration(
-                                boxShadow: const [
-                                  BoxShadow(
-                                      color: ThemeColor.shadow,
-                                      blurRadius: 10,
-                                      spreadRadius: 0.1,
-                                      offset: Offset(0, 10)),
-                                ],
+                                // boxShadow: const [
+                                //   BoxShadow(
+                                //       color: ThemeColor.shadow,
+                                //       blurRadius: 10,
+                                //       spreadRadius: 0.1,
+                                //       offset: Offset(0, 10)),
+                                // ],
                                 borderRadius: BorderRadius.circular(10),
                                 color: ThemeColor.primary,
                                 border: Border.all(
@@ -213,7 +213,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : IconButton(
                                         onPressed: () {
-                                          // TODO:
                                           setState(() {
                                             currentVideoIndex -= 1;
                                           });
@@ -313,7 +312,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       )
                                     : IconButton(
                                         onPressed: () {
-                                          // TODO:
                                           setState(() {
                                             currentVideoIndex += 1;
                                           });
@@ -380,17 +378,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                               width: double.infinity,
                                               height: 70,
                                               decoration: BoxDecoration(
-                                                  boxShadow: const [
-                                                    BoxShadow(
-                                                        color:
-                                                            ThemeColor.shadow,
-                                                        blurRadius: 10,
-                                                        spreadRadius: 0.1,
-                                                        offset: Offset(0, 10)),
-                                                  ],
+                                                  // boxShadow: const [
+                                                  //   BoxShadow(
+                                                  //       color:
+                                                  //           ThemeColor.shadow,
+                                                  //       blurRadius: 10,
+                                                  //       spreadRadius: 0.1,
+                                                  //       offset: Offset(0, 10)),
+                                                  // ],
                                                   color: ThemeColor.offWhite,
                                                   borderRadius:
-                                                      BorderRadius.circular(20),
+                                                      BorderRadius.circular(10),
                                                   border: Border.all(
                                                       color: ThemeColor.primary,
                                                       width: 0.1)),
@@ -463,7 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                                             show.snackbar(
                                                                 context,
                                                                 'Downloading video: ${snapshot.key.toString()}...');
-                                                            
+
                                                             vs
                                                                 .download(
                                                                     snapshot

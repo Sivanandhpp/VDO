@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:vdo/firebase_options.dart';
 import 'package:vdo/core/auth_service.dart';
@@ -16,7 +17,20 @@ main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   dbReference = FirebaseDatabase.instance.ref();
+  requestStoragePermission();
   runApp(const MyApp());
+}
+
+Future<bool?> requestStoragePermission() async {
+  if (!await Permission.storage.isGranted) {
+    PermissionStatus result = await Permission.storage.request();
+    Permission.accessMediaLocation.request();
+    if (result.isGranted) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
 
 class MyApp extends StatelessWidget {

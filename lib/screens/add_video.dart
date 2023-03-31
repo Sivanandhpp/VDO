@@ -57,13 +57,13 @@ class AddVideo extends StatelessWidget {
                   width: double.infinity,
                   height: 60,
                   decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                          color: ThemeColor.shadow,
-                          blurRadius: 10,
-                          spreadRadius: 0.1,
-                          offset: Offset(0, 10)),
-                    ],
+                    // boxShadow: const [
+                    //   BoxShadow(
+                    //       color: ThemeColor.shadow,
+                    //       blurRadius: 10,
+                    //       spreadRadius: 0.1,
+                    //       offset: Offset(0, 10)),
+                    // ],
                     color: ThemeColor.primary,
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -83,16 +83,18 @@ class AddVideo extends StatelessWidget {
                   width: double.infinity,
                   height: 60,
                   decoration: BoxDecoration(
-                    boxShadow: const [
-                      BoxShadow(
-                          color: ThemeColor.shadow,
-                          blurRadius: 10,
-                          spreadRadius: 0.1,
-                          offset: Offset(0, 10)),
-                    ],
-                    color: ThemeColor.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                      // boxShadow: const [
+                      //   BoxShadow(
+                      //       color: ThemeColor.shadow,
+                      //       blurRadius: 10,
+                      //       spreadRadius: 0.1,
+                      //       offset: Offset(0, 10)),
+                      // ],
+
+                      color: ThemeColor.white,
+                      borderRadius: BorderRadius.circular(20),
+                      border:
+                          Border.all(color: ThemeColor.primary, width: 0.2)),
                   child: Padding(
                       padding:
                           const EdgeInsets.only(left: 20, right: 20, top: 5),
@@ -118,13 +120,15 @@ class AddVideo extends StatelessWidget {
                       width: width - 90,
                       height: 60,
                       decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                              color: ThemeColor.shadow,
-                              blurRadius: 10,
-                              spreadRadius: 0.1,
-                              offset: Offset(0, 10)),
-                        ],
+                        border:
+                            Border.all(color: ThemeColor.primary, width: 0.2),
+                        // boxShadow: const [
+                        //   BoxShadow(
+                        //       color: ThemeColor.shadow,
+                        //       blurRadius: 10,
+                        //       spreadRadius: 0.1,
+                        //       offset: Offset(0, 10)),
+                        // ],
                         color: ThemeColor.white,
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -158,13 +162,15 @@ class AddVideo extends StatelessWidget {
                         width: 60,
                         height: 60,
                         decoration: BoxDecoration(
-                          boxShadow: const [
-                            BoxShadow(
-                                color: ThemeColor.shadow,
-                                blurRadius: 10,
-                                spreadRadius: 0.1,
-                                offset: Offset(0, 10)),
-                          ],
+                          border:
+                              Border.all(color: ThemeColor.primary, width: 0.2),
+                          // boxShadow: const [
+                          //   BoxShadow(
+                          //       color: ThemeColor.shadow,
+                          //       blurRadius: 10,
+                          //       spreadRadius: 0.1,
+                          //       offset: Offset(0, 10)),
+                          // ],
                           color: ThemeColor.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
