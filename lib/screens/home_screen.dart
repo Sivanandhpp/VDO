@@ -63,19 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Future<String> get getTempDir async {
-    final tempDir = await getTemporaryDirectory();
-    return tempDir.path;
-  }
-
   @override
   void initState() {
     super.initState();
-    getTempDir.then((value) {
-      vidDir = value;
+    vs.getTempDir.then((value) {
+      vidDir = value.path;
+      _listofFiles();
     });
 
-    _listofFiles();
+    
 
     VideoPlayerUtils.playerHandle(
         'https://manusebastian.com/assets/img/content/ajio/ajiofirst.mp4',
