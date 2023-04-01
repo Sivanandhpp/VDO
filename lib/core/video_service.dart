@@ -10,7 +10,12 @@ import 'package:encrypt/encrypt.dart' as enc;
 class VideoService {
   Future<Directory> get getAppDir async {
     final appDocDir = await getApplicationDocumentsDirectory();
-    return appDocDir;
+    if (await Directory('${appDocDir.path}/VDO/encrypted').exists()) {
+      return appDocDir;
+    } else {
+      Directory('${appDocDir.path}/VDO/encrypted').create(recursive: true);
+      return appDocDir;
+    }
   }
 
   Future<Directory> get getTempDir async {
@@ -31,8 +36,6 @@ class VideoService {
       await Directory('/storage/emulated/0/VDO').create(recursive: true);
       await Directory('/storage/emulated/0/VDO/encrypted')
           .create(recursive: true);
-      await Directory('/storage/emulated/0/VDO/decrypted')
-          .create(recursive: true);
       final externalDir = Directory('/storage/emulated/0/VDO');
       return externalDir;
     }
@@ -40,20 +43,20 @@ class VideoService {
 
   Future<bool?> download(String videoURL, String fileName) async {
     //To access visible directory
-    Directory d = await getExternalVisibleDir;
+    // Directory d = await getExternalVisibleDir;
     Directory write = await getTempDir;
     //App directory : will not be visible but secured
-    // Directory d = await getAppDir;
-
+    Directory d = await getAppDir;
+    
     return _downloadAndCreate(videoURL, d, fileName);
   }
 
   Future<String> getVideo(String fileName) async {
     //To access visible directory
-    Directory d = await getExternalVisibleDir;
+    // Directory d = await getExternalVisibleDir;
     Directory write = await getTempDir;
     //App directory : will not be visible but secured
-    // Directory d = await getAppDir;
+    Directory d = await getAppDir;
 
     return _getNormalFile(d, write, fileName);
   }
@@ -64,9 +67,9 @@ class VideoService {
       var resp = await http.get(Uri.parse(url));
 
       var encResult = _encryptData(resp.bodyBytes);
-      
+
       String p =
-          await _writeData(encResult, '${d.path}/encrypted/$filename.aes');
+          await _writeData(encResult, '${d.path}/VDO/encrypted/$filename.aes');
       // String p = await _writeData(encResult, '/storage/emulated/0/VDO/demo.mp4.aes');
       print("file encrypted successfully: $p");
       return true;
@@ -77,7 +80,7 @@ class VideoService {
   }
 
   Future<String> _getNormalFile(Directory d, Directory write, filename) async {
-    Uint8List encData = await _readData('${d.path}/encrypted/$filename.aes');
+    Uint8List encData = await _readData('${d.path}/VDO/encrypted/$filename.aes');
     // Uint8List encData = await _readData('/storage/emulated/0/VDO/demo.mp4.aes');
     var plainData = await _decryptData(encData);
     String p = await _writeData(

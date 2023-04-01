@@ -1,6 +1,10 @@
+// ignore_for_file: unused_local_variable
+
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -50,7 +54,23 @@ class _MyAppState extends State<MyApp> {
       }
     } else {
       spInstance.setInt('theme', 1);
-       _themeMode = ThemeMode.system;
+      _themeMode = ThemeMode.system;
+    }
+  }
+
+  createDir() async {
+    final tempDir = await getTemporaryDirectory();
+    if (await Directory('${tempDir.path}/VDO/decrypted').exists()) {
+      final tempDirec = tempDir.path;
+    } else {
+      Directory('${tempDir.path}/VDO/decrypted').create(recursive: true);
+    }
+    final appDocDir = await getApplicationDocumentsDirectory();
+    if (await Directory('${appDocDir.path}/VDO/encrypted').exists()) {
+      final appDocDirr = appDocDir.path;
+    } else {
+      Directory('${appDocDir.path}/VDO/encrypted').create(recursive: true);
+      final appDocDirr = appDocDir.path;
     }
   }
 
@@ -58,6 +78,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     getTheme();
+    createDir();
   }
 
   @override

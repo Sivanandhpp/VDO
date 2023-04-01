@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   DatabaseService dbservice = DatabaseService();
   ShowSnackbar show = ShowSnackbar();
   VideoService vs = VideoService();
-  late String directory;
+
   List file = [];
   List tempFile = [];
   List<String> fileList = [];
@@ -41,6 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget? _playerUI;
   VideoPlayerTop? _top;
   String vidDir = "/data/user/0/com.example.vdo/cache";
+  String appDir = "/data/user/0/com.example.vdo/app_flutter";
   VideoPlayerBottom? _bottom;
   LockIcon? _lockIcon;
   String videoName = 'AjioFirst';
@@ -49,29 +50,30 @@ class _HomeScreenState extends State<HomeScreen> {
   Map<int, Map<String, String>> itemMap = {};
   void _listofFiles() {
     // directory = (await getApplicationDocumentsDirectory()).path;
-    setState(() {
-      file = Directory("/storage/emulated/0/VDO/encrypted").listSync();
-      tempFile = Directory("$vidDir/VDO/decrypted").listSync();
-      for (int i = 0; i < file.length; i++) {
-        String s = file[i].toString();
-        fileList.add(s.substring(0, s.indexOf('.')).split('/').last);
-      }
-      for (int i = 0; i < tempFile.length; i++) {
-        String s = tempFile[i].toString();
-        tempFileList.add(s.split('/').last.replaceAll('.mp4\'', ''));
-      }
-    });
+
+    file = Directory("$appDir/VDO/encrypted").listSync();
+    tempFile = Directory("$vidDir/VDO/decrypted").listSync();
+    for (int i = 0; i < file.length; i++) {
+      String s = file[i].toString();
+      fileList.add(s.split('/').last.replaceAll('.aes\'', ''));
+    }
+    for (int i = 0; i < tempFile.length; i++) {
+      String s = tempFile[i].toString();
+      tempFileList.add(s.split('/').last.replaceAll('.mp4\'', ''));
+    }
+    setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    vs.getTempDir.then((value) {
-      vidDir = value.path;
-      _listofFiles();
+    vs.getAppDir.then((value) {
+      appDir = value.path;
+      vs.getTempDir.then((value) {
+        vidDir = value.path;
+        _listofFiles();
+      });
     });
-
-    
 
     VideoPlayerUtils.playerHandle(
         'https://manusebastian.com/assets/img/content/ajio/ajiofirst.mp4',
@@ -603,7 +605,9 @@ class _HomeScreenState extends State<HomeScreen> {
     } else if (fileList.contains(videoName)) {
       show.snackbar(context, 'Loading video: $videoName from storage...');
       vs.getVideo(videoName).then((value) {
-        tempFileList.add(videoName);
+        setState(() {
+          _listofFiles();
+        });
 
         _changeVideo("$vidDir/VDO/decrypted/$videoName.mp4");
       });
