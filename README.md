@@ -1,16 +1,3 @@
-# vdo
+# VDO
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+VDO is an ultimate video storage application that has been developed using cutting-edge technologies like Flutter and Firebase. With a robust video player that comes with advanced gesture-based and button-based controls, you can now enjoy your videos like never before. The app also features a secure phone number and an OTP-based login system, making it easier for you to access your videos while keeping your account safe. VDO is also designed with your convenience in mind and comes with both dark and light themes. But that's not all - to ensure that your videos remain protected, the app uses AES encryption to safeguard them from external usage. Caching video and other optimizations make seamless and optimized video playback.
